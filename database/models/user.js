@@ -17,9 +17,9 @@ const User = sequelize.define(
     email: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true, // Ensures no duplicate emails
+      unique: true,
       validate: {
-        isEmail: true, // Ensures valid email format
+        isEmail: true,
       },
     },
     password_hash: {
@@ -29,17 +29,17 @@ const User = sequelize.define(
     role: {
       type: DataTypes.ENUM("student", "university"),
       allowNull: false,
-      defaultValue: "student", // Default role is student
+      defaultValue: "student",
     },
   },
   {
-    timestamps: true, // Automatically adds createdAt & updatedAt fields
+    tableName: "User", // Explicitly define table name
+    timestamps: true,
     hooks: {
       beforeCreate: async (user) => {
-        user.password_hash = await bcrypt.hash(user.password_hash, 10); // Hash password before saving
+        user.password_hash = await bcrypt.hash(user.password_hash, 10);
       },
     },
   }
 );
-
 module.exports = User;

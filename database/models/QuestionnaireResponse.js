@@ -26,3 +26,4 @@ const QuestionnaireResponse = sequelize.define("QuestionnaireResponse", {
 });
 
 module.exports = QuestionnaireResponse;
+//truer
