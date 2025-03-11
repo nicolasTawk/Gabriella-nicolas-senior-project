@@ -35,11 +35,7 @@ const User = sequelize.define(
   {
     tableName: "User", // Explicitly define table name
     timestamps: true,
-    hooks: {
-      beforeCreate: async (user) => {
-        user.password_hash = await bcrypt.hash(user.password_hash, 10);
-      },
-    },
+  
   }
 );
 module.exports = User;

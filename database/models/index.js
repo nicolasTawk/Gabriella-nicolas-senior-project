@@ -16,4 +16,4 @@ const syncModels = async () => {
   }
 };
 
-module.exports = { syncModels };
+module.exports = { syncModels ,User, QuestionnaireResponse };
