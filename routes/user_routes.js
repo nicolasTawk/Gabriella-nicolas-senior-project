@@ -1,35 +1,37 @@
 const express = require("express");
 const { registerUser, loginUser } = require("../controllers/user_login");
-const { body, validationResult } = require("express-validator");
+const { body } = require("express-validator");
 const rateLimit = require("express-rate-limit");
 
 const router = express.Router();
 
-// CHANGE: Added rate limiting
+// Rate limiter to prevent brute-force
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 10, // Limit each IP to 100 requests per windowMs
+  max: 10,
 });
 
-// Register route with validation
+// Public registration => only students
 router.post(
   "/register",
-  limiter, // CHANGE: Added rate limiter
+  limiter,
   [
-    body("email").isEmail().normalizeEmail(), // CHANGE: Added email validation
-    body("password").isLength({ min: 5 }), // CHANGE: Added password validation
-    body("full_name").not().isEmpty().trim().escape(), // CHANGE: Added name validation
+    body("email").isEmail().normalizeEmail(),
+    body("password").isLength({ min: 5 }),
+    body("full_name").not().isEmpty().trim().escape(),
   ],
   registerUser
 );
 
-// Login route with validation
+// Public login => any role can log in
 router.post(
   "/login",
-  limiter, // CHANGE: Added rate limiter
+  limiter,
   [
-    body("email").isEmail().normalizeEmail(), // CHANGE: Added email validation
-    body("password").isLength({ min: 5 }), // CHANGE: Added password validation
+    body("email").isEmail().normalizeEmail(),
+    body("password").isLength({ min: 5 }),
+    // Optional field if you explicitly want to log in as admin
+    body("loginAs").optional().isIn(["admin"]),
   ],
   loginUser
 );

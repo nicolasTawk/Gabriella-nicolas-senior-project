@@ -1,11 +1,11 @@
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 const { User } = require("../database/models");
-const { body, validationResult } = require("express-validator");
+const { validationResult } = require("express-validator");
+const { generateToken } = require("../middleware/auth_middleware");
 
-// ✅ Register a User
+// Register a User (self-registration) => only student
 const registerUser = async (req, res) => {
-  // CHANGE: Added input validation
+  // Validate inputs
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -14,46 +14,69 @@ const registerUser = async (req, res) => {
   const { full_name, email, password, role } = req.body;
 
   try {
-    // CHANGE: Added password hashing before creating the user
+    // Hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
+
+    // Force all public registrations to "student"
+    // This ensures that no one can self-register as a university or admin
+    const finalRole = "student";
 
     const newUser = await User.create({
       full_name,
       email,
       password_hash: hashedPassword,
-      role: role || "student",
+      role: finalRole,
+      approved: true, // auto-approved for student
     });
 
-    res.status(201).json({ message: "User registered!", user: newUser });
+    // Generate a token for immediate login
+    const token = generateToken(newUser);
+
+    res.status(201).json({
+      message: "User registered as student!",
+      user: newUser,
+      token,
+    });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 };
 
-// ✅ Login User
+// Login a User (student, university, or admin)
 const loginUser = async (req, res) => {
-  // CHANGE: Added input validation
+  // Validate inputs
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { email, password } = req.body;
+  const { email, password, loginAs } = req.body;
 
   try {
     const user = await User.findOne({ where: { email } });
-    if (!user) return res.status(404).json({ error: "User not found" });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
 
-    const validPassword = await bcrypt.compare(password, user.password_hash);
-    if (!validPassword) return res.status(401).json({ error: "Invalid password" });
+    // If logging in as admin, ensure user is admin
+    if (loginAs === "admin" && user.role !== "admin") {
+      return res.status(403).json({ error: "This account is not an administrator account" });
+    }
 
-    // CHANGE: Added JWT token generation for login
-    const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, {
-      expiresIn: "3h",
+    // Validate password
+    const validPassword = await user.validPassword(password);
+    if (!validPassword) {
+      return res.status(401).json({ error: "Invalid password" });
+    }
+
+    // Generate JWT
+    const token = generateToken(user);
+    res.json({
+      message: "Login successful",
+      token,
+      user,
     });
-
-    res.json({ message: "Login successful", token, user });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

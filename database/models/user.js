@@ -27,15 +27,26 @@ const User = sequelize.define(
       allowNull: false,
     },
     role: {
-      type: DataTypes.ENUM("student", "university"),
+      type: DataTypes.ENUM("student", "university", "admin"),
       allowNull: false,
       defaultValue: "student",
     },
+    approved: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      // Students are auto-approved; university accounts must be created by an admin.
+      defaultValue: true,
+    },
   },
   {
-    tableName: "User", // Explicitly define table name
+    tableName: "User",
     timestamps: true,
-  
   }
 );
+
+// Instance method to validate passwords
+User.prototype.validPassword = async function (password) {
+  return await bcrypt.compare(password, this.password_hash);
+};
+
 module.exports = User;
