@@ -21,7 +21,7 @@ app.use("/api/v1/users", userRoutes);
 
 // Admin endpoints
 app.use("/api/v1/admin", adminRoutes);
-
+// HELLOOOOOOOO
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ error: "Something went wrong!" });
