@@ -8,7 +8,7 @@ function generateToken(user) {
   const payload = {
     id: user.id,
     role: user.role,
-    email: user.email,
+    username: user.username,
   };
   return jwt.sign(payload, JWT_SECRET, { expiresIn: "3h" });
 }

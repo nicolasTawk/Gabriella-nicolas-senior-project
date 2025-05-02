@@ -3,6 +3,7 @@ const { createUniversity } = require("../controllers/admin_controller");
 const { deleteUserByEmail, updateUserByEmail } = require("../controllers/user_managment");
 const { body } = require("express-validator");
 const { requireAdmin } = require("../middleware/auth_middleware");
+const { uploadSchema, activateSchema } = require("../controllers/schema_admin_controller");
 
 const router = express.Router();
 
@@ -31,5 +32,22 @@ router.put(
   ],
   updateUserByEmail
 );
+
+// ---- Questionnaire schema management ----
+
+// Upload a new JSON-Schema (optionally activate immediately)
+router.post(
+  "/questionnaire/schema",
+  requireAdmin,
+  uploadSchema
+);
+
+// Flip the is_active flag to a stored version
+router.put(
+  "/questionnaire/schema/:version/activate",
+  requireAdmin,
+  activateSchema
+);
+
 
 module.exports = router;

@@ -1,7 +1,8 @@
 const bcrypt = require("bcrypt");
-const { User } = require("../database/models");
+const { User,StudentProfile } = require("../database/models");
 const { validationResult } = require("express-validator");
 const { generateToken } = require("../middleware/auth_middleware");
+
 
 // Register a User (self-registration) => only student
 const registerUser = async (req, res) => {
@@ -11,7 +12,18 @@ const registerUser = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { full_name, email, password, role } = req.body;
+  const {
+      first_name,
+      last_name,
+      username,
+      email,
+      password,
+      gender,
+      birth_date,
+      phone,
+      parent_name,
+      recent_school,
+    } = req.body;
 
   try {
     // Hash password
@@ -23,12 +35,25 @@ const registerUser = async (req, res) => {
     const finalRole = "student";
 
     const newUser = await User.create({
-      full_name,
+      first_name,
+      last_name,
+      username,
       email,
-      password_hash: hashedPassword,
       role: finalRole,
-      approved: true, // auto-approved for student
+      password_hash: hashedPassword,
     });
+
+    await StudentProfile.create({
+    
+       user_id: newUser.id,
+       phone,
+       email,
+       gender,
+       birth_date,
+       parent_name,
+       recent_school,
+    });
+    
 
     // Generate a token for immediate login
     const token = generateToken(newUser);
@@ -51,10 +76,11 @@ const loginUser = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { email, password, loginAs } = req.body;
+  const { username, password, loginAs } = req.body;
+
 
   try {
-    const user = await User.findOne({ where: { email } });
+    const user = await User.findOne({ where: { username } });
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }

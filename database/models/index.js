@@ -1,10 +1,13 @@
 const { sequelize } = require("../db_connection");
 const User = require("./User");
 const QuestionnaireResponse = require("./QuestionnaireResponse");
+const QuestionnaireSchema = require("./QuestionnaireSchema");
+const StudentProfile = require("./StudentProfile");
 
 // Define relationships (if any)
 User.hasMany(QuestionnaireResponse, { foreignKey: "user_id", onDelete: "CASCADE" });
 QuestionnaireResponse.belongsTo(User, { foreignKey: "user_id" });
+
 
 // Function to sync all models
 const syncModels = async () => {
@@ -16,4 +19,4 @@ const syncModels = async () => {
   }
 };
 
-module.exports = { syncModels ,User, QuestionnaireResponse };
+module.exports = { syncModels, User, QuestionnaireResponse, QuestionnaireSchema, StudentProfile };

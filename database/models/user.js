@@ -10,10 +10,22 @@ const User = sequelize.define(
       autoIncrement: true,
       primaryKey: true,
     },
-    full_name: {
-      type: DataTypes.STRING,
-      allowNull: false,
+
+    first_name: { 
+    type: DataTypes.STRING(60), allowNull: false 
     },
+
+    last_name:  { 
+    type: DataTypes.STRING(60), allowNull: false 
+    },
+
+    /** Unique username students will use to log in */
+    username: {
+      type: DataTypes.STRING(40),
+      allowNull: false,
+      unique: true,
+    },
+
     email: {
       type: DataTypes.STRING,
       allowNull: false,
