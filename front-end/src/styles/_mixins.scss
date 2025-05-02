@@ -1,0 +1,92 @@
+// src/styles/_mixins.scss
+
+// // Responsive breakpoints (using min-width, Desktop-first)
+// @mixin respond($breakpoint) {
+//     @if $breakpoint == xsmall {
+//       @media (min-width: 0px) { @content; } // Very small phones
+//     }
+//     @else if $breakpoint == small {
+//       @media (min-width: 480px) { @content; } // Regular phones
+//     }
+//     @else if $breakpoint == medium {
+//       @media (min-width: 768px) { @content; } // Tablets
+//     }
+//     @else if $breakpoint == large {
+//       @media (min-width: 992px) { @content; } // Small laptops
+//     }
+//     @else if $breakpoint == xlarge {
+//       @media (min-width: 1200px) { @content; } // Desktop
+//     }
+//     @else if $breakpoint == xxlarge {
+//       @media (min-width: 1400px) { @content; } // Large monitors (your 1400px)
+//     }
+//   }
+  
+//   // Floating animated label
+//   @mixin animated-label($focus-color) {
+//     position: absolute;
+//     left: 0;
+//     top: 18px;
+//     font-size: 1rem;
+//     color: #999;
+//     pointer-events: none;
+//     transition: 0.2s ease all;
+  
+//     .form-control:focus + &,
+//     .not-empty & {
+//       top: 0;
+//       font-size: 0.8rem;
+//       color: $focus-color;
+//     }
+//   }
+
+
+
+// src/styles/_mixins.scss
+
+// Responsive breakpoints (Mobile-First using max-width)
+@mixin respond($breakpoint) {
+
+    @if $breakpoint == large-desktop {
+      @media (max-width: 1800px) { @content; } // Large monitors
+    }
+    @else if $breakpoint == desktop {
+      @media (max-width: 1400px) { @content; } // Big desktops (1440p)
+    }
+    @else if $breakpoint == big-tablet {
+      @media (max-width: 1200px) { @content; } // Standard desktops
+    }
+    @else if $breakpoint == tablet {
+      @media (max-width: 992px) { @content; } // Tablets and small laptops
+    }
+    @else if $breakpoint == small-tablet {
+      @media (max-width: 768px) { @content; } // Big phones and small tablets
+    }
+    @else if $breakpoint == phone {
+      @media (max-width: 600px) { @content; } // Regular phones
+    }
+    @else if $breakpoint == small-phone {
+      @media (max-width: 400px) { @content; } // Very small phones
+    }
+  }
+  
+  @mixin animated-label($primary-color) {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1rem;
+    color: #999;
+    pointer-events: none;
+    transition: 0.2s ease all;
+  
+    // When input is focused OR input has content
+    input:focus + &,
+    .not-empty & {
+      top: 0;
+      transform: translateY(0);
+      font-size: 0.75rem;
+      color: $primary-color;
+    }
+  }
+  

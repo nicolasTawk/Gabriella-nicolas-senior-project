@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import api from '../../http-common';
 import '../../styles/style.scss';
 
-const Home = () => {
+const Questionnaire = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -14,10 +14,10 @@ const Home = () => {
 
   return (
     <div>
-      <h1>Welcome to Home Page!</h1>
+      <h1>Welcome to Questionnaire Page!</h1>
       <button onClick={handleLogout}>Logout</button>
     </div>
   );
 };
 
-export default Home;
+export default Questionnaire;

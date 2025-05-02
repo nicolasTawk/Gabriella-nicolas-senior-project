@@ -1,0 +1,87 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.universities {
+  &__container {
+    padding: 2rem;
+  }
+
+  &__search-wrapper {
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  &__search-group {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+
+    .universities__input {
+      width: 100%;
+      padding: 12px 0 12px 36px; // space for icon
+      border: none;
+      border-bottom: 2px solid $border-color;
+      background: transparent;
+      font-size: 1rem;
+      color: $text-color;
+      transition: all 0.3s ease;
+
+      &::placeholder {
+        color: $border-color;
+        opacity: 1;
+      }
+
+      &:focus {
+        border-bottom-color: $primary-color;
+        outline: none;
+      }
+    }
+
+    .universities__icon {
+      position: absolute;
+      top: 50%;
+      left: 10px;
+      transform: translateY(-50%);
+      color: $border-color;
+      font-size: 1rem;
+      pointer-events: none;
+      transition: color 0.3s ease;
+    }
+    &:focus-within .universities__icon {
+        color: $primary-color;
+      }
+  }
+
+  &__card {
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    padding: 1rem;
+    transition: transform 0.3s;
+
+    &:hover {
+      transform: translateY(-4px);
+    }
+
+    img {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+      border-radius: 5px;
+    }
+
+    &-title {
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin-top: 1rem;
+    }
+
+    &-location {
+      font-size: 0.95rem;
+      color: black;
+    }
+  }
+}

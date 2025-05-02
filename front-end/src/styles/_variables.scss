@@ -1,13 +1,39 @@
-// // src/styles/variables.scss
-// $light-primary: #4EA685;
-// $light-secondary: #57B894;
-// $dark-primary: #2C786C;
-// $dark-secondary: #3A8D7E;
-// $white: #ffffff;
-// $black: #000000;
-// $gray: #efefef;
-// $gray-2: #757575;
+// src/styles/_variables.scss
 
-// // breakpoints
-// // $sm: 425px;
+// Theme colors
+$primary-color: #00246B;
+$secondary-color: #CADCFC;
+$background-color: #ffffff;
+$text-color: #333333;
+$border-color: #cccccc;
+$error-color: #e74c3c;
+$success-color: #2ecc71;
 
+// Font Sizes
+$font-small: 0.8rem;
+$font-medium: 1rem;
+$font-large: 1.5rem;
+
+// Border radius
+$border-radius: 8px;
+
+// Spacing
+$spacing-small: 8px;
+$spacing-medium: 16px;
+$spacing-large: 32px;
+
+
+.z-1 {
+    z-index: 1;
+}
+.z-2 {
+    z-index: 3;
+}
+
+.h-auto{
+    height:auto;
+}
+
+.ml-5rem{
+    margin-left: 5rem;
+}
