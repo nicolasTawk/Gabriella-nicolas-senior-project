@@ -23,6 +23,23 @@ const QuestionnaireResponse = sequelize.define("QuestionnaireResponse", {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW,
   },
+  
+  /** Which questionnaire version produced these answers */
+  schema_version: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+
+  /** AI output – array of exactly three majors */
+  recommended_majors: {
+    type: DataTypes.JSON,
+    allowNull: true,
+  },
+  /** (Optional) the exact prompt we sent to OpenAI – great for audits */
+  research_context: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+  },
 });
 
 module.exports = QuestionnaireResponse;

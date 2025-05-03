@@ -7,26 +7,48 @@ import logo from '../../util/images/logo.png';
 
 const Login = ({ onLogin }) => {
   const [isLogin, setIsLogin] = useState(true);
-  const [loginData, setLoginData] = useState({ email: '', password: '' });
-  const [registerData, setRegisterData] = useState({ username: '', email: '', password: '', confirmPassword: '' });
+  const [loginData, setLoginData] = useState({
+    userName: '',
+    password: ''
+  });
+  const [registerData, setRegisterData] = useState({
+    firstName: '',
+    lastName: '',
+    userName: '',
+    dob: '',
+    phoneNumber: '',
+    email: '',
+    gender: '',
+    password: '',
+    confirmPassword: ''
+  });
+
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleLoginChange = (e) => setLoginData({ ...loginData, [e.target.name]: e.target.value });
-  const handleRegisterChange = (e) => setRegisterData({ ...registerData, [e.target.name]: e.target.value });
+  const handleLoginChange = (e) => {
+    setLoginData({ ...loginData, [e.target.name]: e.target.value });
+  };
+
+  const handleRegisterChange = (e) => {
+    setRegisterData({ ...registerData, [e.target.name]: e.target.value });
+  };
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
     setError('');
     setSuccess('');
+    setLoading(true);
+
+    console.log("🔐 Login Payload:", loginData); // ✅ Logging what is actually being sent
+
     try {
-      const response = await api.post('/users/login', loginData);
-      localStorage.setItem('authToken', response.data.token);
-      api.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
-      setSuccess('Login successful! Redirecting...');
+      const res = await api.post('/users/login', loginData);
+      localStorage.setItem('authToken', res.data.token);
+      api.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`;
+      setSuccess('Login successful!');
       setTimeout(() => {
         onLogin();
         navigate('/home');
@@ -40,22 +62,28 @@ const Login = ({ onLogin }) => {
 
   const handleRegisterSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
     setError('');
     setSuccess('');
+    setLoading(true);
+
     if (registerData.password !== registerData.confirmPassword) {
       setError('Passwords do not match');
       setLoading(false);
       return;
     }
 
+    const payload = {
+      firstName: registerData.firstName,
+      lastName: registerData.lastName,
+      userName: registerData.userName,
+      dob: registerData.dob,
+      phoneNumber: registerData.phoneNumber,
+      email: registerData.email,
+      gender: registerData.gender,
+      password: registerData.password
+    };
+
     try {
-      const payload = {
-        fullName: registerData.username,
-        email: registerData.email,
-        password: registerData.password,
-        role: 'student',
-      };
       await api.post('/users/register', payload);
       setSuccess('Account created successfully! Please login.');
       setTimeout(() => setIsLogin(true), 1500);
@@ -67,7 +95,7 @@ const Login = ({ onLogin }) => {
   };
 
   const renderInput = (type, name, value, onChange) => (
-    <div className="form-group">
+    <div className="form-group" key={name}>
       <input
         type={type}
         name={name}
@@ -79,10 +107,12 @@ const Login = ({ onLogin }) => {
         placeholder=" "
       />
       <label htmlFor={name} className="animated-label">
-        {name === 'confirmPassword'
+        {name === 'dob'
+          ? 'Date of Birth'
+          : name === 'phoneNumber'
+          ? 'Phone Number'
+          : name === 'confirmPassword'
           ? 'Confirm Password'
-          : name === 'username'
-          ? 'Username'
           : name.charAt(0).toUpperCase() + name.slice(1)}
       </label>
     </div>
@@ -95,7 +125,7 @@ const Login = ({ onLogin }) => {
           {isLogin ? (
             <form onSubmit={handleLoginSubmit} className="form-box">
               <h2 className="title">Sign In</h2>
-              {renderInput('email', 'email', loginData.email, handleLoginChange)}
+              {renderInput('text', 'userName', loginData.userName, handleLoginChange)}
               {renderInput('password', 'password', loginData.password, handleLoginChange)}
               <button type="submit" className="primary-btn">
                 {loading ? 'Logging in...' : 'Login'}
@@ -106,10 +136,31 @@ const Login = ({ onLogin }) => {
           ) : (
             <form onSubmit={handleRegisterSubmit} className="form-box">
               <h2 className="title">Sign Up</h2>
-              {renderInput('text', 'username', registerData.username, handleRegisterChange)}
+              {renderInput('text', 'firstName', registerData.firstName, handleRegisterChange)}
+              {renderInput('text', 'lastName', registerData.lastName, handleRegisterChange)}
+              {renderInput('text', 'userName', registerData.userName, handleRegisterChange)}
+              {renderInput('date', 'dob', registerData.dob, handleRegisterChange)}
+              {renderInput('text', 'phoneNumber', registerData.phoneNumber, handleRegisterChange)}
               {renderInput('email', 'email', registerData.email, handleRegisterChange)}
               {renderInput('password', 'password', registerData.password, handleRegisterChange)}
               {renderInput('password', 'confirmPassword', registerData.confirmPassword, handleRegisterChange)}
+
+              <div className="form-group">
+                <select
+                  name="gender"
+                  className="form-control"
+                  value={registerData.gender}
+                  onChange={handleRegisterChange}
+                  required
+                >
+                  <option value="" disabled hidden></option>
+                  <option value="female">Female</option>
+                  <option value="male">Male</option>
+                  <option value="other">Other</option>
+                </select>
+                <label className="animated-label" htmlFor="gender">Gender</label>
+              </div>
+
               <button type="submit" className="primary-btn">
                 {loading ? 'Creating Account...' : 'Sign Up'}
               </button>

@@ -3,7 +3,12 @@ const { registerUser, loginUser } = require("../controllers/user_login");
 const { updateSelf, deleteSelf } = require("../controllers/user_managment");
 const { body } = require("express-validator");
 const rateLimit = require("express-rate-limit");
+// Questionnaire AI workflow
+const { submitQuestionnaire } = require("../controllers/questionnaire_controller");
+const validateQuestionnaire   = require("../middleware/validate_questionnaire");
+const { getActiveSchema }     = require("../services/questionnaire_schema_service");
 const { requireAuth } = require("../middleware/auth_middleware");
+const { getStudent, updateStudent } = require("../controllers/student_profile_controller");
 
 const router = express.Router();
 
@@ -18,9 +23,13 @@ router.post(
   "/register",
   limiter,
   [
+    body("username").trim().isLength({ min: 3, max: 40 }).withMessage("Username must be 3-40 characters long."),   
+    body("first_name").not().isEmpty().trim().escape(),
+    body("last_name").not().isEmpty().trim().escape(),
     body("email").isEmail().normalizeEmail(),
     body("password").isLength({ min: 5 }),
-    body("full_name").not().isEmpty().trim().escape(),
+
+   
   ],
   registerUser
 );
@@ -30,12 +39,32 @@ router.post(
   "/login",
   limiter,
   [
-    body("email").isEmail().normalizeEmail(),
+    body("username").trim().isLength({ min: 3, max: 40 }).withMessage("Username must be 3-40 characters long."),   
     body("password").isLength({ min: 5 }),
+
     // Optional field for explicit admin login
     body("loginAs").optional().isIn(["admin"]),
   ],
   loginUser
+);
+
+// Public: get active questionnaire schema
+router.get("/questionnaire/schema", async (_req, res) => {
+  try {
+    const { version, schema } = await getActiveSchema();
+    res.json({ version, schema });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "No active questionnaire schema" });
+  }
+});
+
+// Student: submit questionnaire answers and receive AI major recommendations
+router.post(
+  "/questionnaire/submit",
+  requireAuth,
+  validateQuestionnaire,
+  submitQuestionnaire
 );
 
 // Protected route for updating your own account (user can change full_name and/or password)
@@ -51,5 +80,21 @@ router.put(
 
 // Protected route for deleting your own account
 router.delete("/me/delete", requireAuth, deleteSelf);
+
+// ─── STUDENT INFO & FULL UPDATE ──────────────────────────────────────
+router.get("/students/profile", requireAuth, getStudent);
+
+router.put(
+  "/students/updade_profile/:id",
+  requireAuth,
+  [
+    // optional express-validator checks
+    body("first_name").optional().trim().escape(),
+    body("last_name").optional().trim().escape(),
+    body("email").optional().isEmail().normalizeEmail(),
+    // add checks for profile fields if you like
+  ],
+  updateStudent
+);
 
 module.exports = router;
