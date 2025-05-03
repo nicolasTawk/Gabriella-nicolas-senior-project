@@ -11,13 +11,7 @@ const User = sequelize.define(
       primaryKey: true,
     },
 
-    first_name: { 
-    type: DataTypes.STRING(60), allowNull: false 
-    },
-
-    last_name:  { 
-    type: DataTypes.STRING(60), allowNull: false 
-    },
+   
 
     /** Unique username students will use to log in */
     username: {

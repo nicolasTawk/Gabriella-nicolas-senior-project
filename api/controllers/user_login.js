@@ -20,9 +20,8 @@ const registerUser = async (req, res) => {
       password,
       gender,
       birth_date,
-      phone,
-      parent_name,
-      recent_school,
+      phone
+    
     } = req.body;
 
   try {
@@ -35,10 +34,9 @@ const registerUser = async (req, res) => {
     const finalRole = "student";
 
     const newUser = await User.create({
-      first_name,
-      last_name,
-      username,
+     
       email,
+      username,
       role: finalRole,
       password_hash: hashedPassword,
     });
@@ -46,12 +44,13 @@ const registerUser = async (req, res) => {
     await StudentProfile.create({
     
        user_id: newUser.id,
+       first_name,
+       last_name,
        phone,
-       email,
        gender,
        birth_date,
-       parent_name,
-       recent_school,
+      
+       
     });
     
 
