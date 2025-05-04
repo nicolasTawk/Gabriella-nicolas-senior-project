@@ -5,10 +5,11 @@ const { body } = require("express-validator");
 const rateLimit = require("express-rate-limit");
 // Questionnaire AI workflow
 const { submitQuestionnaire } = require("../controllers/questionnaire_controller");
-const validateQuestionnaire   = require("../middleware/validate_questionnaire");
-const { getActiveSchema }     = require("../services/questionnaire_schema_service");
+const {validateQuestionnaire }  = require("../middleware/validate_questionnaire");
+const { getActiveSchema, }     = require("../services/questionnaire_schema_service");
 const { requireAuth } = require("../middleware/auth_middleware");
 const { getStudent, updateStudent } = require("../controllers/student_profile_controller");
+const {getSchema} = require("../controllers/schema_admin_controller");
 
 const router = express.Router();
 
@@ -27,7 +28,7 @@ router.post(
     body("first_name").not().isEmpty().trim().escape(),
     body("last_name").not().isEmpty().trim().escape(),
     body("email").isEmail().normalizeEmail(),
-    body("password").isLength({ min: 5 }),
+    body("password").isLength({ min: 5 }),// must be 8 characters must contain capital and spetian 
 
    
   ],
@@ -66,6 +67,10 @@ router.post(
   validateQuestionnaire,
   submitQuestionnaire
 );
+
+router.get("/questionnaire/schema/:version?", getSchema);
+
+
 
 // Protected route for updating your own account (user can change full_name and/or password)
 router.put(

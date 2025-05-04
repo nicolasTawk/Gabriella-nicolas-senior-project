@@ -20,4 +20,42 @@ const activateSchema = async (req, res) => {
   res.json({ message: "Activated", version: req.params.version });
 };
 
-module.exports = { uploadSchema, activateSchema };
+const getSchema = async (req, res) => {
+  const { version } = req.params;
+
+  try {
+    let schemaRecord;
+
+    if (version) {
+      // fetch specific version
+      schemaRecord = await QuestionnaireSchema.findOne({
+        where: { version },
+      });
+      if (!schemaRecord) {
+        return res
+          .status(404)
+          .json({ error: `Schema version ${version} not found` });
+      }
+    } else {
+      // fetch currently active
+      schemaRecord = await QuestionnaireSchema.findOne({
+        where: { is_active: true },
+        order: [["updatedAt", "DESC"]],
+      });
+      if (!schemaRecord) {
+        return res.status(404).json({ error: "No active schema found" });
+      }
+    }
+
+    res.json({
+      version: schemaRecord.version,
+      schema_json: schemaRecord.schema_json,
+      is_active: schemaRecord.is_active,
+    });
+  } catch (err) {
+    console.error("Error fetching schema:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+module.exports = { uploadSchema, activateSchema, getSchema };
