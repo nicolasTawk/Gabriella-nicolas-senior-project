@@ -1,79 +1,7 @@
-// // src/styles/styles.scss
-
-// @import './variables';
-// @import './mixins';
-
-// *,
-// *::before,
-// *::after {
-//   margin: 0;
-//   padding: 0;
-//   box-sizing: border-box;
-// }
-
-// html, body {
-//   font-family: 'Poppins', sans-serif;
-//   height: 100%;
-//   background: $background-color;
-// }
-
-// .transparent {
-//     background: transparent;
-// }
-
-// .title {
-// font-size: 2.5rem;
-// margin-bottom: 1rem;
-// color: $primary-color;
-// }
-
-// .page-content {
-//   transition: margin-left 0.3s ease;
-//   margin-left: 60px; // default sidebar width
-
-//   &.shifted {
-//     margin-left: 200px; // expanded sidebar width
-//   }
-// }
-
-// .layout-wrapper {
-//   display: flex;
-// }
-
-// .layout-content {
-//   width: 100%;
-//   padding-left: 60px; // collapsed sidebar width
-//   transition: padding-left 0.3s ease;
-
-//   &--shifted {
-//     padding-left: 200px; // expanded sidebar width
-//   }
-// }
-
-// // .layout {
-// //   display: flex;
-// // }
-
-// .main-content {
-//   width: 100%;
-//   padding: 2rem;
-//   transition: margin-left 0.3s ease;
-//   margin-left: 60px; // default sidebar width
-
-//   .sidebar--open & {
-//     margin-left: 200px; // expanded sidebar
-//   }
-
-//   @media (max-width: 600px) {
-//     margin-left: 0 !important;
-//   }
-// }
-
 
 @import './variables';
 @import './mixins';
 
-/* Reset & Global Base */
 *,
 *::before,
 *::after {
@@ -84,12 +12,11 @@
 
 html, body {
   height: 100%;
-  font-family: 'Open Sans', sans-serif;
+  // font-family: 'Open Sans', sans-serif;
   background-color: $background-color;
   color: $text-color;
 }
 
-/* Layout wrapper for sidebar pages */
 .app-wrapper {
   display: flex;
   height: 100vh;
@@ -106,19 +33,17 @@ html, body {
   }
 }
 
-/* Main content area */
 .main-content {
   flex-grow: 1;
-  padding: 2rem;
+  padding: 1.5rem;
   transition: margin-left 0.3s ease;
   overflow-x: hidden;
   background-color: $background-color;
 }
 
-/* Responsive padding */
 @include respond(tablet) {
   .main-content {
-    padding: 1.5rem;
+    padding: 1rem;
   }
 }
 
@@ -133,7 +58,6 @@ html, body {
   }
 }
 
-/* Auth page layout */
 .auth-page-wrapper {
   width: 100%;
   min-height: 100vh;
@@ -142,9 +66,8 @@ html, body {
   align-items: center;
 }
 
-/* Feedback messages */
 .error {
-  color: $error-color;
+  color: $danger-color;
   margin-top: 0.5rem;
 }
 

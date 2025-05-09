@@ -54,7 +54,11 @@ const Navbar = ({onToggle}) => {
             <FaUniversity className="nav-sidebar__icon" /> {isOpen && 'Universities'}
           </Link>
         </li>
-        
+        <li className={location.pathname === '/majors' ? 'nav-sidebar__item nav-sidebar__item--active' : 'nav-sidebar__item'}>
+          <Link to="/majors">
+            <FaUniversity className="nav-sidebar__icon" /> {isOpen && 'Universities'}
+          </Link>
+        </li>
       </ul>
 
       <ul className="nav-sidebar__section nav-sidebar__section--bottom">

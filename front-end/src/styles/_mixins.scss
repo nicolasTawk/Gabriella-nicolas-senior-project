@@ -89,4 +89,24 @@
       color: $primary-color;
     }
   }
+  @mixin input-style() {
+    width: 100%;
+    border: none;
+    border-bottom: 2px solid $border-color;
+    background-color: transparent;
+    padding: 0.5rem 0;
+    font-size: 1rem;
+    color: $text-color;
+    transition: border-color 0.3s ease;
   
+    &:focus,
+    &:active {
+      outline: none;
+      border-color: $primary-color;
+    }
+  
+    &::placeholder {
+      color: $border-color;
+    }
+
+  }

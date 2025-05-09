@@ -24,7 +24,7 @@ const submitQuestionnaire = async (req, res) => {
       recommended_majors: majors,
       research_context:  prompt
     });
-
+    
     /* 3 ─ Client response */
     res.status(201).json({ majors });
   } catch (err) {

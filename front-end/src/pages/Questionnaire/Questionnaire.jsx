@@ -1,108 +1,503 @@
+// import React, { useEffect, useState } from 'react';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+// import api from '../../http-common';
+// import Loader from '../../context/Loader/Loader';
+// import '../../styles/style.scss';
+// import './Questionnaire.scss';
+
+// const QUESTION_LABELS = {
+//   childhoodActivities: 'What activities did you enjoy the most during your childhood?',
+//   mainChildhoodHobby: 'What was your main childhood hobby?',
+//   currentTopHobbies: 'What are your current top hobbies?',
+//   creativeHours: 'How many hours per week do you spend on creative tasks?',
+//   technicalHours: 'How many hours per week do you spend on technical tasks?',
+//   easiestSubject: 'Which subject do you find the easiest?',
+//   hardestSubject: 'Which subject do you find the hardest?',
+//   bestGradeSubjects: 'Which subjects did you get the best grades in?',
+//   likesAbstractProblems: 'How much do you enjoy solving abstract problems?',
+//   likesWriting: 'How much do you enjoy writing or expressing yourself in words?',
+//   leadershipScore: 'Rate your leadership ability (1–5)',
+//   prefersSolo: 'Do you prefer working alone or in a team? (1 = solo, 5 = team)',
+//   taskPreference: 'Which type of task do you prefer the most?',
+//   organiseVsCreate: 'Do you prefer organizing or creating things?',
+//   preferredTaskExample: 'Which of these tasks do you prefer?',
+//   workOutcome: 'What do you expect your work outcome to focus on?',
+//   jobStability: 'How important is job stability for you? (1–5)',
+//   highSalary: 'How important is a high salary to you? (1–5)',
+//   futureEnvironment: 'Which work environment do you see yourself in?',
+//   careerImpact: 'What impact do you want your career to have?'
+// };
+
+// const scaleQuestions = ['leadershipScore', 'prefersSolo', 'jobStability', 'highSalary', 'likesAbstractProblems', 'likesWriting'];
+// const rangeQuestions = ['creativeHours', 'technicalHours'];
+
+// const Questionnaire = () => {
+//   const [schema, setSchema] = useState(null);
+//   const [answers, setAnswers] = useState({});
+//   const [loading, setLoading] = useState(true);
+//   const [submitting, setSubmitting] = useState(false);
+//   const [showForm, setShowForm] = useState(false);
+//   const [submitStatus, setSubmitStatus] = useState('');
+//   const [error, setError] = useState('');
+//   const [recommendedMajors, setRecommendedMajors] = useState([]);
+
+//   useEffect(() => {
+//     const fetchSchema = async () => {
+//       try {
+//         const res = await api.get('/users/questionnaire/schema');
+//         setSchema(res.data);
+//       } catch (err) {
+//         setError(err.response?.data?.error || 'Failed to load questionnaire. Please try again later.');
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+//     fetchSchema();
+//   }, []);
+
+//   const handleChange = (key, value) => {
+//     setAnswers((prev) => ({ ...prev, [key]: value }));
+//   };
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     setSubmitStatus('');
+//     setError('');
+//     setSubmitting(true);
+//     setRecommendedMajors([]);
+
+//     const requiredFields = schema?.schema?.schema_json?.required || [];
+//     const missing = requiredFields.filter((field) => !answers[field] && answers[field] !== 0);
+
+//     if (missing.length > 0) {
+//       setError('Please answer all required questions before submitting.');
+//       setSubmitting(false);
+//       return;
+//     }
+
+//     const token = localStorage.getItem('token');
+//     const payload = {
+//       answers: Object.fromEntries(Object.entries(answers).filter(([_, v]) => v !== undefined && v !== null && v !== ''))
+//     };
+
+//     try {
+//       const res = await api.post(
+//         '/users/questionnaire/submit',
+//         payload,
+//         { headers: { Authorization: `Bearer ${token}` } }
+//       );
+
+//       if (res.data.majors) {
+//         setRecommendedMajors(Object.values(res.data.majors));
+//         setSubmitStatus('✅ Questionnaire submitted successfully!');
+//         setShowForm(false);
+//       } else {
+//         setSubmitStatus('✅ Questionnaire submitted, but no specific major recommendation received.');
+//       }
+//     } catch (err) {
+//       setError(err.response?.data?.error || 'Failed to submit answers.');
+//     } finally {
+//       setSubmitting(false);
+//     }
+//   };
+
+//   const properties = schema?.schema?.schema_json?.properties || {};
+//   const requiredFields = schema?.schema?.schema_json?.required || [];
+
+//   if (loading || submitting) return <Loader fullScreen={true} />;
+
+//   return (
+//     <div className="questionnaire">
+//       <div className="row">
+//         <div className="col-12">
+//           {!showForm && !recommendedMajors.length && (
+//             <>
+//               <h2 className="questionnaire__title mb-2">AI Guidance Questionnaire</h2>
+//               <p className="questionnaire__description mb-4">
+//                 This AI-powered questionnaire helps guide you in discovering the university majors that best match your passions,
+//                 academic strengths, and desired career impact. Answer thoughtfully to receive personalized and accurate results.
+//               </p>
+//               <div className="text-center mt-4">
+//                 <button className="primary-btn" onClick={() => setShowForm(true)}>
+//                   Take Questionnaire
+//                 </button>
+//               </div>
+//             </>
+//           )}
+
+//           {(showForm || recommendedMajors.length > 0) && (
+//             <div className="arrow-icon mb-3" onClick={() => {
+//               setShowForm(false);
+//               setRecommendedMajors([]);
+//             }}>
+//               <FontAwesomeIcon className='h-1-5-rem' icon={faArrowLeft} />
+//             </div>
+//           )}
+
+//           {error && <p className="text-danger fw-semibold mb-3">{error}</p>}
+//           {submitStatus && <p className="text-success fw-semibold mb-3">{submitStatus}</p>}
+
+//           {recommendedMajors.length > 0 && (
+//             <>
+//               <div className="recommendation-box">
+//                 <h5 className="mb-2 fw-bold title-color">🎓 Recommended Majors:</h5>
+//                 <ul className="mb-0">
+//                   {recommendedMajors.map((major, index) => (
+//                     <li key={index}>{major}</li>
+//                   ))}
+//                 </ul>
+//               </div>
+//               <div className="text-center mt-4 d-flex justify-content-center gap-3">
+//                 <button
+//                   className="primary-btn"
+//                   onClick={() => {
+//                     setAnswers({});
+//                     setShowForm(true);
+//                     setRecommendedMajors([]);
+//                   }}
+//                 >
+//                   Retake Questionnaire
+//                 </button>
+//                 <button
+//                   className="primary-btn"
+//                   onClick={() => {
+//                     window.location.href = '../../Universities';
+//                   }}
+//                 >
+//                   View Universities
+//                 </button>
+//               </div>
+//             </>
+//           )}
+
+//           {showForm && (
+//             <form className="questionnaire__form d-block" onSubmit={handleSubmit}>
+//               {Object.entries(properties).map(([key, q]) => (
+//                 <div key={key} className="row w-100 mb-4 g-2 align-items-start">
+//                   <div className="col-12">
+//                     <label className="form-label questionnaire__question fw-bold">
+//                       {QUESTION_LABELS[key] || q.title || key}
+//                     </label>
+//                   </div>
+//                   <div className="col-6">
+//                     {scaleQuestions.includes(key) ? (
+//                       <div className="number-btn-group">
+//                         {[1, 2, 3, 4, 5].map((num) => (
+//                           <button
+//                             type="button"
+//                             key={num}
+//                             className={`number-btn ${answers[key] === num ? 'active' : ''}`}
+//                             onClick={() => handleChange(key, num)}
+//                           >
+//                             {num}
+//                           </button>
+//                         ))}
+//                       </div>
+//                     ) : rangeQuestions.includes(key) ? (
+//                       <div className="range-slider-group">
+//                         <input
+//                           type="range"
+//                           min="0"
+//                           max="168"
+//                           value={answers[key] || 0}
+//                           onChange={(e) => handleChange(key, parseInt(e.target.value))}
+//                           required={requiredFields.includes(key)}
+//                         />
+//                         <span className="range-value">{answers[key] || 0}</span>
+//                       </div>
+//                     ) : q.enum ? (
+//                       <div className="radio-group-vertical">
+//                         {q.enum.map((opt, idx) => (
+//                           <label key={idx} className="custom-radio d-block mb-2">
+//                             <input
+//                               type="radio"
+//                               name={key}
+//                               value={opt}
+//                               checked={answers[key] === opt}
+//                               onChange={(e) => handleChange(key, e.target.value)}
+//                               required={requiredFields.includes(key)}
+//                             />
+//                             <span className={answers[key] === opt ? 'selected' : ''}>{opt}</span>
+//                           </label>
+//                         ))}
+//                       </div>
+//                     ) : (
+//                       <input
+//                         type={q.type === 'integer' ? 'number' : 'text'}
+//                         className="questionnaire-answer"
+//                         value={answers[key] || ''}
+//                         onChange={(e) => handleChange(key, e.target.value)}
+//                         required={requiredFields.includes(key)}
+//                         placeholder="Your answer"
+//                       />
+//                     )}
+//                   </div>
+//                 </div>
+//               ))}
+//               <div className="text-center mt-4">
+//                 <button type="submit" className="primary-btn">
+//                   Submit
+//                 </button>
+//               </div>
+//             </form>
+//           )}
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Questionnaire;
+
+
+
 import React, { useEffect, useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import api from '../../http-common';
+import Loader from '../../context/Loader/Loader';
+import '../../styles/style.scss';
 import './Questionnaire.scss';
 
+const QUESTION_LABELS = {
+  childhoodActivities: 'What activities did you enjoy the most during your childhood?',
+  mainChildhoodHobby: 'What was your main childhood hobby?',
+  currentTopHobbies: 'What are your current top hobbies?',
+  creativeHours: 'How many hours per week do you spend on creative tasks?',
+  technicalHours: 'How many hours per week do you spend on technical tasks?',
+  easiestSubject: 'Which subject do you find the easiest?',
+  hardestSubject: 'Which subject do you find the hardest?',
+  bestGradeSubjects: 'Which subjects did you get the best grades in?',
+  likesAbstractProblems: 'How much do you enjoy solving abstract problems?',
+  likesWriting: 'How much do you enjoy writing or expressing yourself in words?',
+  leadershipScore: 'Rate your leadership ability (1–5)',
+  prefersSolo: 'Do you prefer working alone or in a team? (1 = solo, 5 = team)',
+  taskPreference: 'Which type of task do you prefer the most?',
+  organiseVsCreate: 'Do you prefer organizing or creating things?',
+  preferredTaskExample: 'Which of these tasks do you prefer?',
+  workOutcome: 'What do you expect your work outcome to focus on?',
+  jobStability: 'How important is job stability for you? (1–5)',
+  highSalary: 'How important is a high salary to you? (1–5)',
+  futureEnvironment: 'Which work environment do you see yourself in?',
+  careerImpact: 'What impact do you want your career to have?'
+};
+
+const scaleQuestions = ['leadershipScore', 'prefersSolo', 'jobStability', 'highSalary', 'likesAbstractProblems', 'likesWriting'];
+const rangeQuestions = ['creativeHours', 'technicalHours'];
+
 const Questionnaire = () => {
-  const [schema, setSchema] = useState([]);
+  const [schema, setSchema] = useState(null);
   const [answers, setAnswers] = useState({});
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [showForm, setShowForm] = useState(false);
   const [submitStatus, setSubmitStatus] = useState('');
   const [error, setError] = useState('');
+  const [recommendedMajors, setRecommendedMajors] = useState([]);
 
-  // Fetch schema on mount
   useEffect(() => {
     const fetchSchema = async () => {
       try {
         const res = await api.get('/users/questionnaire/schema');
         setSchema(res.data);
-        setLoading(false);
       } catch (err) {
-        console.error('❌ Error fetching schema:', err.response?.data || err.message);
-        setError('Failed to load questionnaire. Please try again later.');
+        setError(err.response?.data?.error || 'Failed to load questionnaire. Please try again later.');
+      } finally {
         setLoading(false);
       }
     };
     fetchSchema();
   }, []);
 
-  // Handle input change
-  const handleChange = (questionId, value) => {
-    setAnswers((prev) => ({ ...prev, [questionId]: value }));
+  const handleChange = (key, value) => {
+    setAnswers((prev) => ({ ...prev, [key]: value }));
   };
 
-  // Submit answers
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitStatus('');
     setError('');
+    setSubmitting(true);
+    setRecommendedMajors([]);
 
+    const requiredFields = schema?.schema?.schema_json?.required || [];
+    const missing = requiredFields.filter((field) => !answers[field] && answers[field] !== 0);
+
+    if (missing.length > 0) {
+      setError('Please answer all required questions before submitting.');
+      setSubmitting(false);
+      return;
+    }
+
+    const token = localStorage.getItem('token');
     const payload = {
-      responses: Object.entries(answers).map(([question_id, answer]) => ({
-        question_id,
-        answer
-      }))
+      answers: Object.fromEntries(Object.entries(answers).filter(([_, v]) => v !== undefined && v !== null && v !== ''))
     };
 
-    console.log('📝 Submitting responses:', payload);
-
     try {
-      await api.post('/users/questionnaire/submit', payload);
-      setSubmitStatus('✅ Questionnaire submitted successfully!');
+      const res = await api.post(
+        '/users/questionnaire/submit',
+        payload,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      if (res.data.majors) {
+        setRecommendedMajors(Object.values(res.data.majors));
+        setSubmitStatus('✅ Questionnaire submitted successfully!');
+        setShowForm(false);
+      } else {
+        setSubmitStatus('✅ Questionnaire submitted, but no specific major recommendation received.');
+      }
     } catch (err) {
-      console.error('❌ Submission error:', err.response?.data || err.message);
-      setError('Failed to submit answers. Please try again.');
+      setError(err.response?.data?.error || 'Failed to submit answers.');
+    } finally {
+      setSubmitting(false);
     }
   };
 
-  if (loading) return <div className="questionnaire-loader">Loading questionnaire...</div>;
+  const properties = schema?.schema?.schema_json?.properties || {};
+  const requiredFields = schema?.schema?.schema_json?.required || [];
+
+  if (loading || submitting) return <Loader fullScreen={true} />;
 
   return (
-    <div className="questionnaire-container">
-      <h2>AI Guidance Questionnaire</h2>
-      <form onSubmit={handleSubmit} className="questionnaire-form">
-        {schema.length === 0 ? (
-          <p>No questions available.</p>
-        ) : (
-          schema.map((q) => (
-            <div key={q.id} className="question-block">
-              <label className="question-label">{q.text}</label>
+    <div className="questionnaire">
+      <div className="row">
+        <div className="col-12">
+          {!showForm && !recommendedMajors.length && (
+            <>
+              <h2 className="questionnaire__title mb-2">AI Guidance Questionnaire</h2>
+              <p className="questionnaire__description mb-4">
+                This AI-powered questionnaire helps guide you in discovering the university majors that best match your passions,
+                academic strengths, and desired career impact. Answer thoughtfully to receive personalized and accurate results.
+              </p>
+              <div className="text-center mt-4">
+                <button className="primary-btn" onClick={() => setShowForm(true)}>
+                  Take Questionnaire
+                </button>
+              </div>
+            </>
+          )}
 
-              {q.type === 'text' && (
-                <input
-                  type="text"
-                  className="question-input"
-                  value={answers[q.id] || ''}
-                  onChange={(e) => handleChange(q.id, e.target.value)}
-                  required
-                />
-              )}
-
-              {q.type === 'multiple-choice' && (
-                <select
-                  className="question-select"
-                  value={answers[q.id] || ''}
-                  onChange={(e) => handleChange(q.id, e.target.value)}
-                  required
-                >
-                  <option value="">Select an option</option>
-                  {q.options.map((opt, index) => (
-                    <option key={index} value={opt}>
-                      {opt}
-                    </option>
-                  ))}
-                </select>
-              )}
+          {(showForm || recommendedMajors.length > 0) && (
+            <div className="questionnaire__arrow mb-3" onClick={() => {
+              setShowForm(false);
+              setRecommendedMajors([]);
+            }}>
+              <FontAwesomeIcon className='h-1-5-rem' icon={faArrowLeft} />
             </div>
-          ))
-        )}
+          )}
 
-        <button type="submit" className="submit-btn">
-          Submit
-        </button>
+          {error && <p className="text-danger fw-semibold mb-3">{error}</p>}
+          {submitStatus && <p className="text-success fw-semibold mb-3">{submitStatus}</p>}
 
-        {submitStatus && <p className="success-msg">{submitStatus}</p>}
-        {error && <p className="error-msg">{error}</p>}
-      </form>
+          {recommendedMajors.length > 0 && (
+            <>
+              <div className="questionnaire__recommendation">
+                <h5 className="questionnaire__recommendation-title mb-2">🎓 Recommended Majors:</h5>
+                <ul className="questionnaire__recommendation-list mb-0">
+                  {recommendedMajors.map((major, index) => (
+                    <li key={index}>{major}</li>
+                  ))}
+                </ul>
+              </div>
+              <div className="text-center mt-4 d-flex justify-content-center gap-3">
+                <button
+                  className="primary-btn"
+                  onClick={() => {
+                    setAnswers({});
+                    setShowForm(true);
+                    setRecommendedMajors([]);
+                  }}
+                >
+                  Retake Questionnaire
+                </button>
+                <button
+                  className="primary-btn"
+                  onClick={() => {
+                    window.location.href = '../../Universities';
+                  }}
+                >
+                  View Universities
+                </button>
+              </div>
+            </>
+          )}
+
+          {showForm && (
+            <form className="questionnaire__form d-block" onSubmit={handleSubmit}>
+              {Object.entries(properties).map(([key, q]) => (
+                <div key={key} className="row w-100 mb-4 g-2 align-items-start">
+                  <div className="col-12">
+                    <label className="form-label questionnaire__question fw-bold">
+                      {QUESTION_LABELS[key] || q.title || key}
+                    </label>
+                  </div>
+                  <div className="col-6">
+                    {scaleQuestions.includes(key) ? (
+                      <div className="questionnaire__scale-group">
+                        {[1, 2, 3, 4, 5].map((num) => (
+                          <button
+                            type="button"
+                            key={num}
+                            className={`questionnaire__scale-group-btn ${answers[key] === num ? 'active' : ''}`}
+                            onClick={() => handleChange(key, num)}
+                          >
+                            {num}
+                          </button>
+                        ))}
+                      </div>
+                    ) : rangeQuestions.includes(key) ? (
+                      <div className="questionnaire__range-group">
+                        <input
+                          type="range"
+                          min="0"
+                          max="168"
+                          value={answers[key] || 0}
+                          onChange={(e) => handleChange(key, parseInt(e.target.value))}
+                          required={requiredFields.includes(key)}
+                        />
+                        <span className="questionnaire__range-group-value">{answers[key] || 0}</span>
+                      </div>
+                    ) : q.enum ? (
+                      <div className="questionnaire__radio-group">
+                        {q.enum.map((opt, idx) => (
+                          <label key={idx} className="questionnaire__radio-group-item">
+                            <input
+                              type="radio"
+                              name={key}
+                              value={opt}
+                              checked={answers[key] === opt}
+                              onChange={(e) => handleChange(key, e.target.value)}
+                              required={requiredFields.includes(key)}
+                            />
+                            <span className={answers[key] === opt ? 'selected' : ''}>{opt}</span>
+                          </label>
+                        ))}
+                      </div>
+                    ) : (
+                      <input
+                        type={q.type === 'integer' ? 'number' : 'text'}
+                        className="questionnaire__answer-input"
+                        value={answers[key] || ''}
+                        onChange={(e) => handleChange(key, e.target.value)}
+                        required={requiredFields.includes(key)}
+                        placeholder="Your answer"
+                      />
+                    )}
+                  </div>
+                </div>
+              ))}
+              <div className="text-center mt-4">
+                <button type="submit" className="primary-btn">
+                  Submit
+                </button>
+              </div>
+            </form>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

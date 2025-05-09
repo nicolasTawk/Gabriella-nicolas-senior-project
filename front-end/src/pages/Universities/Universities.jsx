@@ -58,7 +58,7 @@ const Universities = () => {
   if (loading) return <Loader/>;
 
   return (
-    <div className="universities__container container">
+    <div className="universities__container">
       {/* Search Bar */}
       <div className="universities__search-wrapper">
       <div className="universities__search-group">

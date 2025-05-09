@@ -6,23 +6,27 @@ $secondary-color: #CADCFC;
 $background-color: #ffffff;
 $text-color: #333333;
 $border-color: #cccccc;
-$error-color: #e74c3c;
+$danger-color: #f52c16;
 $success-color: #2ecc71;
 
 // Font Sizes
-$font-small: 0.8rem;
-$font-medium: 1rem;
-$font-large: 1.5rem;
+$text-small: 0.8rem;
+$text-medium: 1rem;
+$text-large: 1.3rem;
+
+$title-small: 1.5rem;
+$title-medium: 1.8rem;
+$title-large:2rem;
 
 // Border radius
-$border-radius: 8px;
+$border-radius: 2rem;
 
 // Spacing
 $spacing-small: 8px;
 $spacing-medium: 16px;
 $spacing-large: 32px;
 
-
+// Z-index
 .z-1 {
     z-index: 1;
 }
@@ -30,10 +34,19 @@ $spacing-large: 32px;
     z-index: 3;
 }
 
+// Height
 .h-auto{
     height:auto;
 }
+.h-1-5-rem{
+    height: 1.5rem;
+}
 
+// Margins 
 .ml-5rem{
     margin-left: 5rem;
+}
+// Title Class 
+.title-color {
+    color: $primary-color;
 }

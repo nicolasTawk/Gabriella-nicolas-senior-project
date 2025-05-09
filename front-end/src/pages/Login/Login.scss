@@ -1,250 +1,258 @@
 @import '../../styles/variables';
 @import '../../styles/mixins';
 
-.page-container {
-width: 100%;
-height: 100vh;
-margin: 0 auto;
-display: flex;
-position: relative;
-overflow: hidden;
-transition: all 0.5s ease-in-out;
-}
+.login {
+  &__container {
+    width: 100%;
+    height: 100vh;
+    margin: 0 auto;
+    display: flex;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.5s ease-in-out;
 
-.form-wrapper {
-width: 50%;
-display: flex;
-align-items: center;
-justify-content: center;
-transition: all 0.5s ease-in-out;
-z-index: 5;
-}
+    &.sign-up-mode .login__form-wrapper {
+      transform: translateX(100%);
+    }
 
-.form-content {
-width: 75%;
-}
+    &.sign-up-mode .login__panel-wrapper {
+      transform: translateX(-100%);
+    }
+  }
 
-.logo {
-width: 75%;
-margin-bottom: 4.5rem;
-}
+  &__form-wrapper {
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.5s ease-in-out;
+    z-index: 5;
+  }
 
-form {
-display: flex;
-flex-direction: column;
-align-items: center;
-text-align: center;
-}
+  &__form-content {
+    width: 50%;
 
-.form-box {
-// max-width: 400px;
-width: 100%;
-background: $background-color;
-padding: 40px;
-border-radius: $border-radius;
-}
+    @include respond(desktop) { 
+      width: 60%;
+    }
+    @include respond(big-tablet) { 
+      width: 80%; 
+    }
+    @include respond(phone) { 
+      width: 100%; 
+    }
+  }
 
-.form-group {
-position: relative;
-margin: 30px 0;
-width: 100%;
+  &__form-box {
+    width: 100%;
+    background: $background-color;
+    padding: 0;
+    border-radius: $border-radius;
 
-.form-control {
-width: 100%;
-font-size: 1rem;
-border: none;
-border-bottom: 2px solid $border-color;
-padding: 12px 0;
-background: transparent;
-color: $text-color;
-transition: all 0.3s ease;
-outline: none;
+    @include respond(tablet) { 
+      padding: 30px; 
+    }
+    @include respond(small-tablet) { 
+      padding: 20px; 
+    }
+  }
 
-css
-Copy
-Edit
-&:focus {
-  border-bottom-color: $primary-color;
-}
+  &__title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: $primary-color;
+    margin-bottom: 1rem;
 
-&:focus + .animated-label,
-&:not(:placeholder-shown) + .animated-label {
-  top: -18px;
-  font-size: 0.8rem;
-  color: $primary-color;
-}
-}
+    @include respond(tablet) { 
+      font-size: 1.8rem; 
+    }
+    @include respond(phone) { 
+      font-size: 1.5rem; 
+    }
+    @include respond(small-phone) { 
+      font-size: 1.4rem; 
+    }
+  }
 
-.animated-label {
-position: absolute;
-top: 12px;
-left: 0;
-color: $border-color;
-pointer-events: none;
-transition: 0.2s ease all;
-}
-}
+  &__input-group {
+    position: relative;
+    margin: 20px 0;
+    width: 100%;
 
-.primary-btn,
-.secondary-btn {
-margin-top: 1.5rem;
-padding: 12px 24px;
-width: 60%;
-border-radius: 2rem;
-font-size: 1.1rem;
-cursor: pointer;
-transition: all 0.3s ease;
-}
+    .form-control {
+      width: 100%;
+      font-size: 1rem;
+      border: none;
+      border-bottom: 2px solid $border-color;
+      padding: 12px 0;
+      background: transparent;
+      color: $text-color;
+      transition: all 0.3s ease;
+      outline: none;
 
-.secondary-btn {
-background: transparent;
-border: 2px solid $secondary-color;
-color: $secondary-color;
+      &:focus {
+        border-bottom-color: $primary-color;
+        box-shadow: none;
+      }
 
-&:hover {
-background: $secondary-color;
-color: $primary-color;
-}
-}
+      &:focus + .animated-label,
+      &:not(:placeholder-shown) + .animated-label {
+        top: -18px;
+        font-size: 0.8rem;
+        color: $primary-color;
+      }
+    }
 
-.primary-btn {
-background: transparent;
-border: 2px solid $primary-color;
-color: $primary-color;
+    .animated-label {
+      position: absolute;
+      top: 12px;
+      left: 0;
+      color: $border-color;
+      pointer-events: none;
+      transition: 0.2s ease all;
+    }
+  }
 
-&:hover {
-background: $primary-color;
-color: white;
-}
-}
+  &__register-inputs {
+    max-height: 70vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: $border-color transparent;
+    padding: 0;
 
-.panel-wrapper {
-width: 50%;
-background: $primary-color;
-display: flex;
-align-items: center;
-justify-content: center;
-color: white;
-transition: all 0.5s ease-in-out;
-}
+    @include respond(phone) { 
+      max-height: 50vh; 
+    }
+    @include respond(small-phone) { 
+      max-height: 45vh; 
+    }
 
-.panel {
-text-align: center;
 
-.content {
-width: 100%;
-color: $secondary-color;
-display: flex;
-flex-direction: column;
-align-items: center;
-text-align: center;
-@include respond(phone){
-  padding-bottom: 3rem;
-}
-}
-}
+    &::-webkit-scrollbar {
+      width: .5px;
+    }
+  
+    &::-webkit-scrollbar-track {
+      background: transparent; 
+    }
+  
+    &::-webkit-scrollbar-thumb {
+      background-color: $border-color;
+      border-radius: 3px;
+    }
+  }
 
-.page-container.sign-up-mode .form-wrapper {
-transform: translateX(100%);
-}
+  &__btn,
+  &__btn--secondary {
+    margin-top: 1.5rem;
+    padding: 12px 24px;
+    width: 60% !important;
+    border-radius: $border-radius;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
 
-.page-container.sign-up-mode .panel-wrapper {
-transform: translateX(-100%);
-}
+  &__btn {
+    background: transparent;
+    border: 2px solid $primary-color;
+    color: $primary-color;
 
-// RESPONSIVE
-@include respond(tablet) {
-.title {
-font-size: 2rem;
-}
+    &:hover {
+      background: $primary-color;
+      color: white;
+    }
+  }
 
-.form-box {
-// max-width: 360px;
-padding: 30px;
-}
+  &__btn--secondary {
+    background: transparent;
+    border: 2px solid $secondary-color;
+    color: $secondary-color;
 
-.btn {
-font-size: 1rem;
-width: 100%;
-}
-}
+    &:hover {
+      background: $secondary-color;
+      color: $primary-color;
+    }
+  }
 
-@include respond(small-tablet) {
-.title {
-font-size: 1.8rem;
-}
+  &__panel-wrapper {
+    width: 50%;
+    background: $primary-color;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    transition: all 0.5s ease-in-out;
+  }
 
-.form-box {
-// max-width: 320px;
-padding: 20px;
-}
+  &__panel {
+    text-align: center;
 
-.form-control {
-font-size: 0.95rem;
-}
+    .content {
+      width: 100%;
+      color: $secondary-color;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
 
-.form-content {
-width: 100% !important;
-}
-}
+      @include respond(phone) {
+        padding-bottom: 3rem;
+      }
+    }
 
-@include respond(phone) {
-.page-container {
-flex-direction: column;
-position: relative;
-overflow: hidden;
-}
+    .login__logo {
+      width: 75%;
+      margin-bottom: 4.5rem;
 
-.form-wrapper,
-.panel-wrapper {
-width: 100%;
-position: absolute;
-left: 0;
-transition: all 0.6s ease-in-out;
-}
+      @include respond(phone) {
+        width: 40%;
+        max-width: 150px;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+      }
+    }
 
-.form-wrapper {
-height: 70%;
-top: 0%;
-z-index: 1;
-}
+    .login__panel-btn {
+      margin-top: 1rem;
+      width: 60%;
+      max-width: 200px;
+      font-size: 1rem;
+    }
+  }
 
-.panel-wrapper {
-height: 30%;
-bottom: 0;
-z-index: 2;
-}
+  @include respond(phone) {
+    &__container {
+      flex-direction: column;
+      position: relative;
+    }
 
-.page-container.sign-up-mode .panel-wrapper {
-transform: translateY(-233%);
-}
+    &__form-wrapper,
+    &__panel-wrapper {
+      width: 100%;
+      position: absolute;
+      left: 0;
+      transition: all 0.6s ease-in-out;
+    }
 
-.page-container.sign-up-mode .form-wrapper {
-transform: translateY(43%);
-}
+    &__form-wrapper {
+      height: 70%;
+      top: 0%;
+      z-index: 1;
+    }
 
-.panel-logo {
-width: 40%;
-max-width: 150px;
-height: auto;
-margin-top: 2rem;
-margin-bottom: 1rem;
-}
+    &__panel-wrapper {
+      height: 30%;
+      bottom: 0;
+      z-index: 2;
+    }
 
-.panel-btn {
-margin-top: 1rem;
-width: 60%;
-max-width: 200px;
-font-size: 1rem;
-}
-}
+    &__container.sign-up-mode &__panel-wrapper {
+      transform: translateY(-233%);
+    }
 
-@include respond(small-phone) {
-.title {
-font-size: 1.4rem;
-}
-
-.form-box {
-// max-width: 250px;
-}
+    &__container.sign-up-mode &__form-wrapper {
+      transform: translateY(43%);
+    }
+  }
 }
