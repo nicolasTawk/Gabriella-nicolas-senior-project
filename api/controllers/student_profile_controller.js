@@ -1,3 +1,4 @@
+const bcrypt = require("bcrypt");
 const { User, StudentProfile } = require("../database/models");
 
 /* ------------------------------------------------------------------ */
@@ -28,17 +29,11 @@ const getStudent = async (req, res) => {
 /*  PUT /students/:id  – update *any* User or StudentProfile column    */
 /* ------------------------------------------------------------------ */
 const updateStudent = async (req, res) => {
-  const { id } = req.params;
-
-  // Same access rule: a student may touch only their own row
-  if (req.user.role === "student" && req.user.id !== +id) {
-    return res.status(403).json({ error: "Forbidden" });
-  }
+  const  id  = req.user.id;
 
   /* Split incoming body into user-table vs. profile-table updates */
-  const USER_FIELDS    = ["first_name", "last_name", "email"];
-  const PROFILE_FIELDS = ["gender", "birth_date", "phone",
-                          "parent_name", "recent_school"];
+  const USER_FIELDS    = [ "email"];
+  const PROFILE_FIELDS = ["gender", "birth_date", "phone", "first_name", "last_name"];
 
   const userUpdates    = {};
   const profileUpdates = {};
@@ -46,6 +41,12 @@ const updateStudent = async (req, res) => {
   for (const [key, value] of Object.entries(req.body)) {
     if (USER_FIELDS.includes(key))    userUpdates[key]    = value;
     if (PROFILE_FIELDS.includes(key)) profileUpdates[key] = value;
+  }
+
+  // Handle password update if provided
+  if (req.body.password) {
+    const salt = await bcrypt.genSalt(10);
+    userUpdates.password_hash = await bcrypt.hash(req.body.password, salt);
   }
 
   try {

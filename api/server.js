@@ -5,9 +5,11 @@ const { syncModels } = require("./database/models");
 const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
-
+const universityRoutes = require("./routes/university_routes");
 const userRoutes = require("./routes/user_routes");
 const adminRoutes = require("./routes/admin_routes");
+const publicRoutes = require("./routes/public_routes");
+
 
 const app = express();
 
@@ -21,6 +23,11 @@ app.use("/api/v1/users", userRoutes);
 
 // Admin endpoints
 app.use("/api/v1/admin", adminRoutes);
+
+app.use("/api/public", publicRoutes);
+
+
+app.use("/api/university", universityRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
