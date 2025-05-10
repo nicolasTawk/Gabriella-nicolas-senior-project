@@ -75,18 +75,13 @@ const loginUser = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { username, password, loginAs } = req.body;
+  const { username, password } = req.body;
 
 
   try {
     const user = await User.findOne({ where: { username } });
     if (!user) {
       return res.status(404).json({ error: "User not found" });
-    }
-
-    // If logging in as admin, ensure user is admin
-    if (loginAs === "admin" && user.role !== "admin") {
-      return res.status(403).json({ error: "This account is not an administrator account" });
     }
 
     // Validate password

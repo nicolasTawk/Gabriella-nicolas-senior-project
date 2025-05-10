@@ -24,10 +24,10 @@ app.use("/api/v1/users", userRoutes);
 // Admin endpoints
 app.use("/api/v1/admin", adminRoutes);
 
-app.use("/api/public", publicRoutes);
+app.use("/api/v1/public", publicRoutes);
 
 
-app.use("/api/university", universityRoutes);
+app.use("/api/v1university", universityRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);

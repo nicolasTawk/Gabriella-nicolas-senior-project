@@ -28,7 +28,7 @@ router.post(
     body("first_name").not().isEmpty().trim().escape(),
     body("last_name").not().isEmpty().trim().escape(),
     body("email").isEmail().normalizeEmail(),
-    body("password").isLength({ min: 5 }),// must be 8 characters must contain capital and spetian 
+    body("password").isLength({ min: 5 }).withMessage("password must be at least 5 characters long"),// must be 8 characters must contain capital and spetian 
 
    
   ],
@@ -40,8 +40,8 @@ router.post(
   "/login",
   limiter,
   [
-    body("username").trim().isLength({ min: 3, max: 40 }).withMessage("Username must be 3-40 characters long."),   
-    body("password").isLength({ min: 5 }),
+    body("username").trim(),   
+    body("password"),
 
     // Optional field for explicit admin login
     body("loginAs").optional().isIn(["admin"]),
