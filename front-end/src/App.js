@@ -49,12 +49,13 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Navbar from './context/Navbar/navbar';
-import Login from './pages/Login/Login';
-import Home from './pages/Home/Home';
-import Universities from './pages/Universities/Universities';
-import Questionnaire from './pages/Questionnaire/Questionnaire';
-import Majors from './pages/Majors/Majors';
-import Profile from './pages/Profile/Profile'
+import Login from './user/Login/Login';
+import Home from './user/Home/Home';
+import Universities from './user/Universities/Universities';
+import Questionnaire from './user/Questionnaire/Questionnaire';
+import Majors from './user/Majors/Majors';
+import Profile from './user/Profile/Profile'
+import Faculties from './university/Faculties/Faculties'
 
 
 const App = () => {
@@ -83,6 +84,7 @@ const App = () => {
           <Route path="/questionnaire" element={<Questionnaire />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/majors" element={<Majors />} />
+          <Route path="/faculties" element={<Faculties />}/>
         </Routes>
       </main>
     </div>

@@ -127,7 +127,7 @@
 //           )}
 
 //           {(showForm || recommendedMajors.length > 0) && (
-//             <div className="arrow-icon mb-3" onClick={() => {
+//             <div className="questionnaire__arrow mb-3" onClick={() => {
 //               setShowForm(false);
 //               setRecommendedMajors([]);
 //             }}>
@@ -140,9 +140,9 @@
 
 //           {recommendedMajors.length > 0 && (
 //             <>
-//               <div className="recommendation-box">
-//                 <h5 className="mb-2 fw-bold title-color">🎓 Recommended Majors:</h5>
-//                 <ul className="mb-0">
+//               <div className="questionnaire__recommendation">
+//                 <h5 className="questionnaire__recommendation-title mb-2">🎓 Recommended Majors:</h5>
+//                 <ul className="questionnaire__recommendation-list mb-0">
 //                   {recommendedMajors.map((major, index) => (
 //                     <li key={index}>{major}</li>
 //                   ))}
@@ -182,12 +182,12 @@
 //                   </div>
 //                   <div className="col-6">
 //                     {scaleQuestions.includes(key) ? (
-//                       <div className="number-btn-group">
+//                       <div className="questionnaire__scale-group">
 //                         {[1, 2, 3, 4, 5].map((num) => (
 //                           <button
 //                             type="button"
 //                             key={num}
-//                             className={`number-btn ${answers[key] === num ? 'active' : ''}`}
+//                             className={`questionnaire__scale-group-btn ${answers[key] === num ? 'active' : ''}`}
 //                             onClick={() => handleChange(key, num)}
 //                           >
 //                             {num}
@@ -195,7 +195,7 @@
 //                         ))}
 //                       </div>
 //                     ) : rangeQuestions.includes(key) ? (
-//                       <div className="range-slider-group">
+//                       <div className="questionnaire__range-group">
 //                         <input
 //                           type="range"
 //                           min="0"
@@ -204,12 +204,12 @@
 //                           onChange={(e) => handleChange(key, parseInt(e.target.value))}
 //                           required={requiredFields.includes(key)}
 //                         />
-//                         <span className="range-value">{answers[key] || 0}</span>
+//                         <span className="questionnaire__range-group-value">{answers[key] || 0}</span>
 //                       </div>
 //                     ) : q.enum ? (
-//                       <div className="radio-group-vertical">
+//                       <div className="questionnaire__radio-group">
 //                         {q.enum.map((opt, idx) => (
-//                           <label key={idx} className="custom-radio d-block mb-2">
+//                           <label key={idx} className="questionnaire__radio-group-item">
 //                             <input
 //                               type="radio"
 //                               name={key}
@@ -225,7 +225,7 @@
 //                     ) : (
 //                       <input
 //                         type={q.type === 'integer' ? 'number' : 'text'}
-//                         className="questionnaire-answer"
+//                         className="questionnaire__answer-input"
 //                         value={answers[key] || ''}
 //                         onChange={(e) => handleChange(key, e.target.value)}
 //                         required={requiredFields.includes(key)}
@@ -249,6 +249,8 @@
 // };
 
 // export default Questionnaire;
+
+
 
 
 
@@ -381,11 +383,11 @@ const Questionnaire = () => {
           )}
 
           {(showForm || recommendedMajors.length > 0) && (
-            <div className="questionnaire__arrow mb-3" onClick={() => {
-              setShowForm(false);
-              setRecommendedMajors([]);
-            }}>
-              <FontAwesomeIcon className='h-1-5-rem' icon={faArrowLeft} />
+            <div className="questionnaire__back-btn">
+              <FontAwesomeIcon icon={faArrowLeft} onClick={() => {
+                setShowForm(false);
+                setRecommendedMajors([]);
+              }} />
             </div>
           )}
 
@@ -403,96 +405,86 @@ const Questionnaire = () => {
                 </ul>
               </div>
               <div className="text-center mt-4 d-flex justify-content-center gap-3">
-                <button
-                  className="primary-btn"
-                  onClick={() => {
-                    setAnswers({});
-                    setShowForm(true);
-                    setRecommendedMajors([]);
-                  }}
-                >
-                  Retake Questionnaire
-                </button>
-                <button
-                  className="primary-btn"
-                  onClick={() => {
-                    window.location.href = '../../Universities';
-                  }}
-                >
-                  View Universities
-                </button>
+                <button className="primary-btn" onClick={() => {
+                  setAnswers({});
+                  setShowForm(true);
+                  setRecommendedMajors([]);
+                }}>Retake Questionnaire</button>
+                <button className="primary-btn" onClick={() => {
+                  window.location.href = '../../Universities';
+                }}>View Universities</button>
               </div>
             </>
           )}
 
           {showForm && (
-            <form className="questionnaire__form d-block" onSubmit={handleSubmit}>
-              {Object.entries(properties).map(([key, q]) => (
-                <div key={key} className="row w-100 mb-4 g-2 align-items-start">
-                  <div className="col-12">
-                    <label className="form-label questionnaire__question fw-bold">
-                      {QUESTION_LABELS[key] || q.title || key}
-                    </label>
-                  </div>
-                  <div className="col-6">
-                    {scaleQuestions.includes(key) ? (
-                      <div className="questionnaire__scale-group">
-                        {[1, 2, 3, 4, 5].map((num) => (
-                          <button
-                            type="button"
-                            key={num}
-                            className={`questionnaire__scale-group-btn ${answers[key] === num ? 'active' : ''}`}
-                            onClick={() => handleChange(key, num)}
-                          >
-                            {num}
-                          </button>
-                        ))}
-                      </div>
-                    ) : rangeQuestions.includes(key) ? (
-                      <div className="questionnaire__range-group">
+            <form className="questionnaire__form" onSubmit={handleSubmit}>
+              <div className="questionnaire__scrollable">
+                {Object.entries(properties).map(([key, q]) => (
+                  <div key={key} className="row w-100 mb-4 g-2 align-items-start">
+                    <div className="col-12">
+                      <label className="form-label questionnaire__question fw-bold">
+                        {QUESTION_LABELS[key] || q.title || key}
+                      </label>
+                    </div>
+                    <div className="col-12 col-lg-6 col-md-6">
+                      {scaleQuestions.includes(key) ? (
+                        <div className="questionnaire__scale-group">
+                          {[1, 2, 3, 4, 5].map((num) => (
+                            <button
+                              type="button"
+                              key={num}
+                              className={`questionnaire__scale-group-btn ${answers[key] === num ? 'active' : ''}`}
+                              onClick={() => handleChange(key, num)}
+                            >
+                              {num}
+                            </button>
+                          ))}
+                        </div>
+                      ) : rangeQuestions.includes(key) ? (
+                        <div className="questionnaire__range-group">
+                          <input
+                            type="range"
+                            min="0"
+                            max="168"
+                            value={answers[key] || 0}
+                            onChange={(e) => handleChange(key, parseInt(e.target.value))}
+                            required={requiredFields.includes(key)}
+                          />
+                          <span className="questionnaire__range-group-value">{answers[key] || 0}</span>
+                        </div>
+                      ) : q.enum ? (
+                        <div className="questionnaire__radio-group">
+                          {q.enum.map((opt, idx) => (
+                            <label key={idx} className="questionnaire__radio-group-item">
+                              <input
+                                type="radio"
+                                name={key}
+                                value={opt}
+                                checked={answers[key] === opt}
+                                onChange={(e) => handleChange(key, e.target.value)}
+                                required={requiredFields.includes(key)}
+                              />
+                              <span className={answers[key] === opt ? 'selected' : ''}>{opt}</span>
+                            </label>
+                          ))}
+                        </div>
+                      ) : (
                         <input
-                          type="range"
-                          min="0"
-                          max="168"
-                          value={answers[key] || 0}
-                          onChange={(e) => handleChange(key, parseInt(e.target.value))}
+                          type={q.type === 'integer' ? 'number' : 'text'}
+                          className="questionnaire__answer-input"
+                          value={answers[key] || ''}
+                          onChange={(e) => handleChange(key, e.target.value)}
                           required={requiredFields.includes(key)}
+                          placeholder="Your answer"
                         />
-                        <span className="questionnaire__range-group-value">{answers[key] || 0}</span>
-                      </div>
-                    ) : q.enum ? (
-                      <div className="questionnaire__radio-group">
-                        {q.enum.map((opt, idx) => (
-                          <label key={idx} className="questionnaire__radio-group-item">
-                            <input
-                              type="radio"
-                              name={key}
-                              value={opt}
-                              checked={answers[key] === opt}
-                              onChange={(e) => handleChange(key, e.target.value)}
-                              required={requiredFields.includes(key)}
-                            />
-                            <span className={answers[key] === opt ? 'selected' : ''}>{opt}</span>
-                          </label>
-                        ))}
-                      </div>
-                    ) : (
-                      <input
-                        type={q.type === 'integer' ? 'number' : 'text'}
-                        className="questionnaire__answer-input"
-                        value={answers[key] || ''}
-                        onChange={(e) => handleChange(key, e.target.value)}
-                        required={requiredFields.includes(key)}
-                        placeholder="Your answer"
-                      />
-                    )}
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
-              <div className="text-center mt-4">
-                <button type="submit" className="primary-btn">
-                  Submit
-                </button>
+                ))}
+              </div>
+              <div className="questionnaire__fixed-controls">
+                <button type="submit" className="primary-btn">Submit</button>
               </div>
             </form>
           )}

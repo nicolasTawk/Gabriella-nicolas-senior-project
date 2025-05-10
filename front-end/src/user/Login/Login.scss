@@ -188,6 +188,10 @@
 
   &__panel {
     text-align: center;
+    font-family: $text-medium;
+    @include respond(phone) {
+      font-size: $text-small;
+    }
 
     .content {
       width: 100%;
@@ -211,20 +215,28 @@
         margin-top: 2rem;
         margin-bottom: 1rem;
       }
+      @include respond(small-phone) {
+        width: 40%;
+        max-width: 150px;
+        margin-top: 2rem;
+        margin-bottom: 0rem;
+      }
     }
 
     .login__panel-btn {
       margin-top: 1rem;
       width: 60%;
       max-width: 200px;
-      font-size: 1rem;
+      font-size: $text-medium;
     }
+    
   }
 
   @include respond(phone) {
     &__container {
       flex-direction: column;
       position: relative;
+      font-size: $text-small;
     }
 
     &__form-wrapper,
