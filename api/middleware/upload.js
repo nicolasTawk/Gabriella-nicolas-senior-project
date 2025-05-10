@@ -6,7 +6,7 @@ const storage = multer.memoryStorage();
 
 function fileFilter(req, file, cb) {
     // Only accept images (MIME type starts with "image/")
-    if (!file.mimetype.startsWith("image")) {
+    if (!file.mimetype.startsWith("image/")) {
       return cb(new Error("Only image files are allowed"), false);
     }
     cb(null, true);
