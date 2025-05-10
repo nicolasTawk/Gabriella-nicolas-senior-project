@@ -42,4 +42,22 @@ function requireAdmin(req, res, next) {
   });
 }
 
-module.exports = { generateToken, requireAuth, requireAdmin };
+function requireUniversity(req, res, next) {
+  requireAuth(req, res, () => {
+    if (req.user.role !== "university") {
+      return res.status(403).json({ error: "university privileges required" });
+    }
+    next();
+  });
+}
+
+function requireStudent(req, res, next) {
+  requireAuth(req, res, () => {
+    if (req.user.role !== "student") {
+      return res.status(403).json({ error: "student privileges required" });
+    }
+    next();
+  });
+}
+
+module.exports = { generateToken, requireAuth, requireAdmin, requireStudent, requireUniversity };

@@ -12,9 +12,9 @@ router.post(
   "/create-university",
   requireAdmin,
   [
-    body("email").isEmail().normalizeEmail(),
+    body("username").isLength({min :5}),
     body("password").isLength({ min: 5 }),
-    body("full_name").not().isEmpty().trim().escape(),
+    body("email").isEmail(),
   ],
   createUniversity
 );

@@ -7,7 +7,7 @@ const rateLimit = require("express-rate-limit");
 const { submitQuestionnaire } = require("../controllers/questionnaire_controller");
 const {validateQuestionnaire }  = require("../middleware/validate_questionnaire");
 const { getActiveSchema, }     = require("../services/questionnaire_schema_service");
-const { requireAuth } = require("../middleware/auth_middleware");
+const { requireAuth, requireStudent, requireUniversity } = require("../middleware/auth_middleware");
 const { getStudent, updateStudent } = require("../controllers/student_profile_controller");
 const {getSchema} = require("../controllers/schema_admin_controller");
 
@@ -87,11 +87,11 @@ router.put(
 router.delete("/me/delete", requireAuth, deleteSelf);
 
 // ─── STUDENT INFO & FULL UPDATE ──────────────────────────────────────
-router.get("/students/profile", requireAuth, getStudent);
+router.get("/students/profile", requireAuth, requireStudent, getStudent);
 
 router.put(
-  "/students/updade_profile/:id",
-  requireAuth,
+  "/students/updade_profile",
+  requireStudent,requireAuth,
   [
     // optional express-validator checks
     body("first_name").optional().trim().escape(),
@@ -99,7 +99,11 @@ router.put(
     body("email").optional().isEmail().normalizeEmail(),
     // add checks for profile fields if you like
   ],
-  updateStudent
+   updateStudent
 );
+
+
+
+
 
 module.exports = router;
