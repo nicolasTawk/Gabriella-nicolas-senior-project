@@ -1,5 +1,6 @@
 // routes/university_routes.js
 const express = require("express");
+const upload = require("../middleware/upload");
 const { requireUniversity } = require("../middleware/auth_middleware");
 const {
   createMyProfile,
@@ -14,7 +15,8 @@ const {
   updateMyMajor,
   deleteMyMajor,
   getMyFaculties,
-  getMyMajors
+  getMyMajors,
+  getMyLogo
 } = require("../controllers/university_profile_controller");
 const { body, param } = require("express-validator");
 
@@ -23,7 +25,7 @@ router.use(requireUniversity);
 
 // Profile
 router.post(
-  "/Add-profile",
+  "/Add-profile", upload.single("image"),
   [
     body("name").notEmpty().withMessage("Name is required").trim().escape(),
     body("website").optional().isURL(),
@@ -38,7 +40,7 @@ router.post(
 );
 router.get("/get-profile", getMyUniversityProfile);
 router.put(
-  "/Update-profile",
+  "/Update-profile", upload.single("image"),
   [
     body("name").optional().trim().escape(),
     body("website").optional().isURL(),
@@ -52,7 +54,14 @@ router.put(
   ],
   updateMyProfile
 );
+
 router.delete("/Delete-profile", deleteMyProfile);
+
+// Serve uploaded logo image
+router.get(
+  "/profile/logo",
+  getMyLogo
+);
 
 // Password
 router.put(

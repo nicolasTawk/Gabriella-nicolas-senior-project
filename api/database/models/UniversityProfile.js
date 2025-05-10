@@ -51,6 +51,11 @@ const UniversityProfile = sequelize.define(
       allowNull: true,
 
     },
+
+    logo_data: {
+     type: DataTypes.BLOB("long"),
+     allowNull: true,
+          },
 },
 
 
