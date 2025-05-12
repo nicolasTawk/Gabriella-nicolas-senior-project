@@ -4,6 +4,7 @@ const {
     Faculty,
     Major
   } = require("../database/models");
+const { Op } = require("sequelize");
   
   /**
    * GET /api/universities
@@ -80,10 +81,50 @@ const {
       res.status(500).json({ error: err.message });
     }
   }
+
+  /**
+   * GET /api/universities/search
+   * Public: list universities offering a given major name (partial match)
+   * Query param: major
+   */
+  async function searchUniversitiesByMajor(req, res) {
+    const { major } = req.query;
+    if (!major) {
+      return res.status(400).json({ error: "Query parameter 'major' is required" });
+    }
+    try {
+      const universities = await UniversityProfile.findAll({
+        attributes: ["user_id", "name", "location", "website"],
+        include: [
+          {
+            model: Faculty,
+            as: "faculties",
+            include: [
+              {
+                model: Major,
+                as: "majors",
+                where: {
+                  name: { [Op.substring]: major }
+                },
+                attributes: []
+              }
+            ],
+            attributes: []
+          }
+        ],
+        distinct: true
+      });
+      res.json({ universities });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: err.message });
+    }
+  }
   
   module.exports = {
     listUniversities,
     getUniversityProfile,
     listUniversityFaculties,
-    listFacultyMajors
+    listFacultyMajors,
+    searchUniversitiesByMajor
   };

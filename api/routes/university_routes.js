@@ -38,7 +38,7 @@ router.post(
   ],
   createMyProfile
 );
-router.get("/get-profile", getMyUniversityProfile);
+router.get("/get-profile", getMyUniversityProfile, getMyLogo);
 router.put(
   "/Update-profile", upload.single("image"),
   [

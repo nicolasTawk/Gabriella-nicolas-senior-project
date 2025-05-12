@@ -65,13 +65,8 @@ async function getMyUniversityProfile(req, res) {
   try {
     const profile = await UniversityProfile.findOne({
       where: { user_id: userId },
-      include: [
-        {
-          model: Faculty,
-          as: "faculties",
-          include: [{ model: Major, as: "majors" }],
-        },
-      ],
+      // exclude raw BLOB data from the profile response
+      attributes: { exclude: ["logo_data"] },
     });
     if (!profile) return res.status(404).json({ error: "Profile not found" });
     res.json({ profile });
