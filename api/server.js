@@ -19,10 +19,10 @@ app.use(morgan("combined"));
 app.use(express.json());
 
 // Public endpoints (student registration & login)
-app.use("/api/v1/users", userRoutes);
+app.use("/api/users", userRoutes);
 
 // Admin endpoints
-app.use("/api/v1/admin", adminRoutes);
+app.use("/api/admin", adminRoutes);
 
 app.use("/api/public", publicRoutes);
 

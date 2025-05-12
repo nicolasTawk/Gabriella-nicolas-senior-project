@@ -1,54 +1,51 @@
 @import '../../styles/variables';
 
-.university-faculties {
+.admin-universities {
   padding: 2rem;
 
   &__header {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     flex-wrap: wrap;
     gap: 1rem;
     margin-bottom: 1.5rem;
   }
 
-  &__search {
-    flex: 1;
-    padding: 0.5rem;
-    border: 1px solid $border-color;
-    border-radius: 0.25rem;
-    font-size: 1rem;
-    max-width: 300px;
+  &__title {
+    font-size: 1.5rem;
+    font-weight: bold;
   }
 
-  &__add-btn {
-    background-color: $primary-color;
-    color: #fff;
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 0.25rem;
+  &__search {
+    padding: 0.5rem;
     font-size: 1rem;
-    cursor: pointer;
-
-    &:hover {
-      background-color: darken($primary-color, 10%);
-    }
+    border: 1px solid $border-color;
+    border-radius: 4px;
+    max-width: 300px;
+    width: 100%;
   }
 
   &__error {
     color: $danger-color;
-    text-align: center;
     font-weight: bold;
+    text-align: center;
+    margin-top: 1rem;
   }
 
   &__table {
     width: 100%;
     border-collapse: collapse;
 
-    th,
-    td {
+    th, td {
       padding: 0.75rem 1rem;
       border: 1px solid $border-color;
       text-align: left;
+    }
+
+    a {
+      color: $primary-color;
+      text-decoration: underline;
     }
   }
 

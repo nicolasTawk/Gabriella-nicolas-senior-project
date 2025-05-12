@@ -11,6 +11,7 @@ const {
    */
   async function listUniversities(req, res) {
     try {
+      console.log('📡 [GET] /api/public/universities called');
       const universities = await UniversityProfile.findAll({
         attributes: [
           "user_id",
@@ -20,9 +21,12 @@ const {
          
         ]
       });
+      console.log(`📦 Fetched ${universities.length} universities from DB`);
       res.json({ universities });
     } catch (err) {
       console.error(err);
+      console.error('❌ Error in listUniversities:', err);
+
       res.status(500).json({ error: err.message });
     }
   }

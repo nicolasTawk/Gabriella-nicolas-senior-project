@@ -1,24 +1,26 @@
-// src/pages/Faculties/Faculties.jsx
 import React, { useEffect, useState } from 'react';
 import api from '../../http-common';
+import Loader from '../../context/Loader/Loader';
 import AddFaculty from '../../modals/AddFaculty/AddFaculty';
 import './Faculties.scss';
 
 const Faculties = () => {
   const [faculties, setFaculties] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const token = localStorage.getItem('token');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [modalOpen, setModalOpen] = useState(false);
 
   const fetchFaculties = async () => {
+    setLoading(true);
     try {
-      const res = await api.get('/university/faculties', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      console.log('📡 Fetching university faculties...');
+      const res = await api.get('/university/faculties');
       setFaculties(res.data.faculties || []);
-    } catch (error) {
-      console.error('❌ Failed to fetch faculties:', error);
+      console.log('✅ Faculties:', res.data.faculties.length);
+    } catch (err) {
+      console.error('❌ Error loading faculties:', err);
+      setError('Failed to load faculties.');
     } finally {
       setLoading(false);
     }
@@ -28,56 +30,62 @@ const Faculties = () => {
     fetchFaculties();
   }, []);
 
-  const handleAdd = (newFaculty) => {
-    setFaculties([...faculties, newFaculty]);
-  };
-
-  const filteredFaculties = faculties.filter(f =>
-    f.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredFaculties = faculties.filter(fac =>
+    fac.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
-    <div className="faculties-page container mt-4">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2 className="title">Faculties</h2>
-        <button className="primary-btn" onClick={() => setShowModal(true)}>Add Faculty</button>
+    <div className="university-faculties">
+      <div className="university-faculties__header">
+        <input
+          className="university-faculties__search"
+          type="text"
+          placeholder="Search faculties..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <button
+          className="university-faculties__add-btn"
+          onClick={() => setModalOpen(true)}
+        >
+          + Add Faculty
+        </button>
       </div>
 
-      <input
-        type="text"
-        className="form-control mb-3"
-        placeholder="Search faculties..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
+      {loading && <Loader />}
+      {error && <p className="university-faculties__error">{error}</p>}
 
-      {loading ? (
-        <p>Loading...</p>
-      ) : filteredFaculties.length === 0 ? (
-        <p>No faculties found.</p>
-      ) : (
-        <table className="table table-bordered table-striped">
-          <thead className="table-light">
+      {!loading && !error && (
+        <table className="university-faculties__table">
+          <thead>
             <tr>
               <th>Name</th>
               <th>Description</th>
             </tr>
           </thead>
           <tbody>
-            {filteredFaculties.map((faculty) => (
-              <tr key={faculty.id}>
-                <td>{faculty.name}</td>
-                <td>{faculty.description}</td>
+            {filteredFaculties.length > 0 ? (
+              filteredFaculties.map((fac) => (
+                <tr key={fac.id}>
+                  <td>{fac.name}</td>
+                  <td>{fac.description || '—'}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="2" className="university-faculties__empty">
+                  No faculties found.
+                </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       )}
 
-      {showModal && (
+      {modalOpen && (
         <AddFaculty
-          onClose={() => setShowModal(false)}
-          onAdd={handleAdd}
+          onClose={() => setModalOpen(false)}
+          onAdd={fetchFaculties}
         />
       )}
     </div>

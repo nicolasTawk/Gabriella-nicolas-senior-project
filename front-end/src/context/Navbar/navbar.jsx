@@ -146,8 +146,8 @@ const Navbar = ({ onToggle }) => {
                 <FaBuilding className="nav-sidebar__icon" /> {isOpen && 'Faculties'}
               </Link>
             </li>
-            <li className={location.pathname === '/profile' ? 'nav-sidebar__item nav-sidebar__item--active' : 'nav-sidebar__item'}>
-              <Link to="/profile">
+            <li className={location.pathname === '/universityProfile' ? 'nav-sidebar__item nav-sidebar__item--active' : 'nav-sidebar__item'}>
+              <Link to="/universityProfile">
                 <FaUser className="nav-sidebar__icon" /> {isOpen && 'Profile'}
               </Link>
             </li>
@@ -156,13 +156,13 @@ const Navbar = ({ onToggle }) => {
       case 'admin':
         return (
           <>
-            <li className={location.pathname === '/admin-dashboard' ? 'nav-sidebar__item nav-sidebar__item--active' : 'nav-sidebar__item'}>
-              <Link to="/admin-dashboard">
+            <li className={location.pathname === '/createUniversity' ? 'nav-sidebar__item nav-sidebar__item--active' : 'nav-sidebar__item'}>
+              <Link to="/createUniversity">
                 <FaHome className="nav-sidebar__icon" /> {isOpen && 'Dashboard'}
               </Link>
             </li>
-            <li className={location.pathname === '/admin/universities' ? 'nav-sidebar__item nav-sidebar__item--active' : 'nav-sidebar__item'}>
-              <Link to="/admin/universities">
+            <li className={location.pathname === '/listUniversities' ? 'nav-sidebar__item nav-sidebar__item--active' : 'nav-sidebar__item'}>
+              <Link to="/listUniversities">
                 <FaUniversity className="nav-sidebar__icon" /> {isOpen && 'Universities'}
               </Link>
             </li>

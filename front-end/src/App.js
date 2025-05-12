@@ -56,6 +56,9 @@ import Questionnaire from './user/Questionnaire/Questionnaire';
 import Majors from './user/Majors/Majors';
 import Profile from './user/Profile/Profile'
 import Faculties from './university/Faculties/Faculties'
+import UniversityProfile from './university/Profile/Profile'
+import CreateUniversity from './admin/CreateUniversity/CreateUniversity';
+import ListUniversities from './admin/ListUniversities/ListUniversities'
 
 
 const App = () => {
@@ -85,6 +88,13 @@ const App = () => {
           <Route path="/profile" element={<Profile />} />
           <Route path="/majors" element={<Majors />} />
           <Route path="/faculties" element={<Faculties />}/>
+          <Route path="/universityProfile" element={<UniversityProfile />}/>
+          <Route path="/createUniversity" element ={<CreateUniversity/>}/>          
+          <Route path="/listUniversities" element ={<ListUniversities/>}/>
+
+      
+
+
         </Routes>
       </main>
     </div>
