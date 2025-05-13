@@ -120,29 +120,6 @@ async function deleteMyProfile(req, res) {
   }
 }
 
-/**
- * PUT /api/university/password
- * (University) Change your own password
- */
-async function updateMyPassword(req, res) {
-  const { password } = req.body;
-  if (!password) return res.status(400).json({ error: "Password is required" });
-
-  const userId = req.user.id;
-  try {
-    const salt = await bcrypt.genSalt(10);
-    const hash = await bcrypt.hash(password, salt);
-    const [updated] = await User.update(
-      { password_hash: hash },
-      { where: { id: userId, role: "university" } }
-    );
-    if (!updated) return res.status(404).json({ error: "User not found" });
-    res.json({ message: "Password updated" });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: err.message });
-  }
-}
 
 /**
  * POST /api/university/faculties
@@ -219,13 +196,13 @@ async function createMyMajor(req, res) {
 
   const userId = req.user.id;
   const facultyId = parseInt(req.params.facultyId, 10);
-  const { name, code, description } = req.body;
+  const { name, code, description, tuition_fee } = req.body;
   try {
     const faculty = await Faculty.findOne({
       where: { id: facultyId, university_profile_id: userId },
     });
     if (!faculty) return res.status(404).json({ error: "Faculty not found" });
-    const major = await Major.create({ faculty_id: facultyId, name, code, description });
+    const major = await Major.create({ faculty_id: facultyId, name, code, description, tuition_fee });
     res.status(201).json({ major });
   } catch (err) {
     console.error(err);
@@ -256,7 +233,8 @@ async function updateMyMajor(req, res) {
     });
     if (!major) return res.status(404).json({ error: "Major not found" });
 
-    await major.update(req.body);
+    const { name, code, description, tuition_fee } = req.body;
+    await major.update({ name, code, description, tuition_fee });
     res.json({ major });
   } catch (err) {
     console.error(err);
@@ -358,7 +336,6 @@ module.exports = {
   getMyUniversityProfile,
   updateMyProfile,
   deleteMyProfile,
-  updateMyPassword,
   createMyFaculty,
   updateMyFaculty,
   deleteMyFaculty,

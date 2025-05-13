@@ -25,7 +25,7 @@ Major.belongsTo(Faculty, { foreignKey: "faculty_id" });
 // Function to sync all models
 const syncModels = async () => {
   try {
-    await sequelize.sync();
+    await sequelize.sync({alter:true});
     console.log("✅ Models synchronized.");
   } catch (error) {
     console.error("❌ Error syncing models:", error);

@@ -12,14 +12,23 @@ const { Op } = require("sequelize");
    */
   async function listUniversities(req, res) {
     try {
-      const universities = await UniversityProfile.findAll({
+      const profiles = await UniversityProfile.findAll({
         attributes: [
           "user_id",
           "name",
           "location",
           "website",
-         
+          "logo_data",
         ]
+      });
+      const universities = profiles.map((p) => {
+        const u = p.toJSON();
+        // embed the image as a base64 string
+        if (u.logo_data) {
+          u.logo_base64 = `data:image/png;base64,${u.logo_data.toString("base64")}`;
+        }
+        delete u.logo_data;
+        return u;
       });
       res.json({ universities });
     } catch (err) {

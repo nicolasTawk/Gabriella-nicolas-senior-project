@@ -3,23 +3,20 @@ const { User } = require("../database/models");
 
 // ----- Self-Management Endpoints (for logged-in users) ----- //
 
-// Update the currently logged-in user: can change full_name and/or password.
-const updateSelf = async (req, res) => {
+// Update the currently logged-in user's profile: can change username and/or email.
+async function updateProfileSelf(req, res) {
   try {
     const userId = req.user.id;
-    const { full_name, password } = req.body;
+    const { username, email } = req.body;
     
     // At least one field must be provided
-    if (!full_name && !password) {
-      return res.status(400).json({ error: "At least one field (full_name or password) must be provided." });
+    if (!username && !email) {
+      return res.status(400).json({ error: "At least one field (username or email) must be provided." });
     }
     
     const updateData = {};
-    if (full_name) updateData.full_name = full_name;
-    if (password) {
-      const salt = await bcrypt.genSalt(10);
-      updateData.password_hash = await bcrypt.hash(password, salt);
-    }
+    if (username) updateData.username = username;
+    if (email) updateData.email = email;
     
     const [updated] = await User.update(updateData, { where: { id: userId } });
     if (updated) {
@@ -31,7 +28,33 @@ const updateSelf = async (req, res) => {
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
-};
+}
+
+/**
+ * PUT /api/user/me/password
+ * Change own password: requires old_password and new_password
+ */
+async function changeMyPassword(req, res) {
+  try {
+    const userId = req.user.id;
+    const { old_password, new_password } = req.body;
+    if (!old_password || !new_password) {
+      return res.status(400).json({ error: "old_password and new_password are required." });
+    }
+    const user = await User.findByPk(userId);
+    const valid = await user.validPassword(old_password);
+    if (!valid) {
+      return res.status(401).json({ error: "Old password is incorrect." });
+    }
+    const salt = await bcrypt.genSalt(10);
+    const password_hash = await bcrypt.hash(new_password, salt);
+    await User.update({ password_hash }, { where: { id: userId } });
+    res.json({ message: "Password changed successfully." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+}
 
 // Delete the currently logged-in user (self-delete)
 const deleteSelf = async (req, res) => {
@@ -98,4 +121,8 @@ const updateUserByEmail = async (req, res) => {
   }
 };
 
-module.exports = { deleteSelf, updateSelf, deleteUserByEmail, updateUserByEmail };
+module.exports = {
+  deleteSelf,
+  updateProfileSelf,
+  changeMyPassword
+};

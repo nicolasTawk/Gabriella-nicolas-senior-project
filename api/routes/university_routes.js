@@ -7,7 +7,7 @@ const {
   getMyUniversityProfile,
   updateMyProfile,
   deleteMyProfile,
-  updateMyPassword,
+  //updateMyPassword,
   createMyFaculty,
   updateMyFaculty,
   deleteMyFaculty,
@@ -38,7 +38,7 @@ router.post(
   ],
   createMyProfile
 );
-router.get("/get-profile", getMyUniversityProfile, getMyLogo);
+router.get("/get-profile", getMyUniversityProfile);
 router.put(
   "/Update-profile", upload.single("image"),
   [
@@ -63,12 +63,12 @@ router.get(
   getMyLogo
 );
 
-// Password
-router.put(
-  "/Change-password",
-  [body("password").isLength({ min: 5 }).withMessage("Password too short")],
-  updateMyPassword
-);
+// // Password
+// router.put(
+//   "/Change-password",
+//   [body("password").isLength({ min: 5 }).withMessage("Password too short")],
+//   updateMyPassword
+// );
 
 // Faculties
 router.post(
