@@ -130,10 +130,42 @@ const { Op } = require("sequelize");
     }
   }
   
-  module.exports = {
-    listUniversities,
-    getUniversityProfile,
-    listUniversityFaculties,
-    listFacultyMajors,
-    searchUniversitiesByMajor
-  };
+/**
+ * GET /api/universities/:userId/majors
+ * Public: list all majors for a university, each with its faculty name
+ */
+async function listMajorsByUniversity(req, res) {
+  const userId = parseInt(req.params.userId, 10);
+  try {
+    // Find all majors whose faculty belongs to the given university
+    const majors = await Major.findAll({
+      include: [{
+        model: Faculty,
+        where: { university_profile_id: userId },
+        attributes: ["name"]
+      }],
+      attributes: ["id", "name","number_of_credits","tuition_fee"]
+    });
+    // Map to desired output: { facultyName: ..., major: ... }
+    const result = majors.map((m) => ({
+      facultyName: m.Faculty.name,
+      major: m.name,
+      number_of_creadits : m.number_of_credits,
+      tuition_fee : m.tuition_fee
+
+    }));
+    res.json({ majors: result });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+}
+
+module.exports = {
+  listUniversities,
+  getUniversityProfile,
+  listUniversityFaculties,
+  listFacultyMajors,
+  searchUniversitiesByMajor,
+  listMajorsByUniversity
+};

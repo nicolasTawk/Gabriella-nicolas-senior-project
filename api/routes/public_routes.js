@@ -5,7 +5,8 @@ const {
   getUniversityProfile,
   listUniversityFaculties,
   listFacultyMajors,
-  searchUniversitiesByMajor
+  searchUniversitiesByMajor,
+  listMajorsByUniversity
 } = require("../controllers/university_public_controller");
 const { param, query } = require("express-validator");
 
@@ -33,6 +34,13 @@ router.get(
   "/universities/:userId/faculties",
   [param("userId").isInt().withMessage("userId must be an integer")],
   listUniversityFaculties
+);
+
+// 5. Majors for a specific university
+router.get(
+  "/universities/:userId/majors",
+  [param("userId").isInt().withMessage("userId must be an integer")],
+  listMajorsByUniversity
 );
 
 // 4. Majors for one faculty
