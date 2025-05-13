@@ -234,7 +234,7 @@ async function updateMyMajor(req, res) {
     if (!major) return res.status(404).json({ error: "Major not found" });
 
     const { name, code, description, tuition_fee } = req.body;
-    await major.update({ name, code, description, tuition_fee });
+    await major.update({ name, code, description, tuition_fee, number_of_credits });
     res.json({ major });
   } catch (err) {
     console.error(err);

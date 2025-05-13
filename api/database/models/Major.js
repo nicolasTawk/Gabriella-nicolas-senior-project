@@ -23,6 +23,11 @@ const Major = sequelize.define(
       type: DataTypes.STRING(200),
       allowNull: false,
     },
+
+    number_of_credits:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
     code: {
       type: DataTypes.STRING(20),
       allowNull: false,
