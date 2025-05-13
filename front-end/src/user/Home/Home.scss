@@ -1,0 +1,163 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.homepage {
+  background: $secondary-color;
+  padding-top: 2rem;
+
+  &__intro {
+    .row {
+      margin-bottom: 2rem;
+    }
+    &-logo {
+      width: 120px;
+      @include respond(phone) { width: 80px; }
+    }
+    &-title {
+      font-size: $title-large;
+      color: $primary-color;
+      font-weight: 700;
+      @include respond(tablet) { font-size: $title-medium; }
+    }
+    &-slogan {
+      font-size: $text-large;
+      color: $text-color;
+      margin-top: 0.5rem;
+      @include respond(tablet) { font-size: $text-medium; }
+    }
+  }
+
+  &__section-title {
+    font-size: $title-large;
+    color: $primary-color;
+    margin-bottom: 1.5rem;
+    @include respond(tablet) { font-size: $title-medium; }
+  }
+
+  &__carousel {
+    margin-bottom: 3rem;
+
+    &-slider {
+      .slick-dots { bottom: -20px; }
+    }
+    &-slide {
+      padding: 0 1rem;
+    }
+    &-image {
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+      border-radius: $border-radius;
+      @include respond(tablet) { height: 250px; }
+    }
+  }
+
+  &__stats {
+    &-grid {
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+    &-stat {
+      background: #fff;
+      padding: 2rem 1rem;
+      border-radius: $border-radius;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+    &-count {
+      font-size: 2.5rem;
+      color: $primary-color;
+      font-weight: 700;
+    }
+    &-title {
+      font-size: $text-large;
+      margin-top: 0.5rem;
+      color: $text-color;
+    }
+  }
+
+  &__about {
+    margin-bottom: 3rem;
+    height: 30vh;
+    .row {
+      justify-content: center;
+    }
+  }
+
+  &__features {
+    margin-bottom: 3rem;
+    .homepage__feature {
+      background: $primary-color;
+      color: $secondary-color;
+      padding: 1rem;
+      border-radius: $border-radius;
+      font-weight: 600;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      transition: transform 0.3s;
+      min-height: 8rem;
+      &:hover { transform: translateY(-4px); }
+    }
+  }
+
+  &__future {
+    margin-bottom: 3rem;
+    &-list {
+      justify-content: center;
+      gap: 1.5rem;
+    }
+    &-item {
+      background: $primary-color;
+      color: $secondary-color;
+      padding: 1rem;
+      border-radius: $border-radius;
+      font-weight: 600;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      transition: transform 0.3s;
+      min-height: 8rem;
+      &:hover { transform: scale(1.03); }
+    }
+  }
+
+  &__contact {
+    background: #f9f9f9;
+    padding: 2rem 1rem;
+    border-radius: $border-radius;
+    margin-bottom: 2rem;
+
+    & .homepage__form {
+      max-width: 500px;
+      margin: 0 auto 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    &-info {
+      p { margin: 0.5rem 0; color: $text-color; }
+    }
+
+    &__input,
+    &__textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid $border-color;
+      border-radius: $border-radius;
+      font-size: $text-large;
+      &:focus { outline: none; border-color: $primary-color; }
+    }
+
+    &__button {
+      background: $primary-color;
+      color: #fff;
+      border: none;
+      padding: 0.75rem;
+      border-radius: $border-radius;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+      &:hover { background: darken($primary-color, 8%); }
+    }
+  }
+}

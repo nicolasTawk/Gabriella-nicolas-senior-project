@@ -32,6 +32,9 @@ async function createMyProfile(req, res) {
  
   } = req.body;
 
+  // Multer put the file here in RAM
+ const logoBuffer = req.file?.buffer;
+
   try {
     const profile = await UniversityProfile.create({
       user_id: userId,
@@ -43,6 +46,7 @@ async function createMyProfile(req, res) {
       location,
       contact_email,
       accreditation,
+      logo_data: logoBuffer,
    
     });
     res.status(201).json({ profile });
@@ -89,7 +93,15 @@ async function updateMyProfile(req, res) {
   try {
     const profile = await UniversityProfile.findOne({ where: { user_id: userId } });
     if (!profile) return res.status(404).json({ error: "Profile not found" });
-    await profile.update(req.body);
+
+    // Build updates object
+    const updates = { ...req.body };
+    // If a new image was uploaded, store its buffer
+    if (req.file?.buffer) {
+      updates.logo_data = req.file.buffer;
+    }
+
+    await profile.update(updates);
     res.json({ profile });
   } catch (err) {
     console.error(err);
@@ -324,6 +336,28 @@ async function getMyMajors(req, res) {
   }
 }
 
+/**
+ * GET /api/university/profile/logo
+ * (University) Fetch the uploaded logo image as binary
+ */
+async function getMyLogo(req, res) {
+  try {
+    const userId = req.body;
+    const profile = await UniversityProfile.findOne({
+      where: { user_id: userId },
+      attributes: ["logo_data"],
+    });
+    if (!profile || !profile.logo_data) {
+      return res.status(404).json({ error: "Logo not found" });
+    }
+    res.set("Content-Type", "image/png");
+    res.send(profile.logo_data);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+}
+
 module.exports = {
   createMyProfile,
   getMyUniversityProfile,
@@ -338,4 +372,5 @@ module.exports = {
   deleteMyMajor,
   getMyFaculties,
   getMyMajors,
+  getMyLogo,
 };

@@ -1,0 +1,50 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.search-bar {
+  &__wrapper {
+    width: 100%;
+   
+  }
+
+  &__group {
+    position: relative;
+    width: 100%;
+
+    .search-bar__input {
+      width: 100%;
+      padding: 12px 0 12px 36px;
+      border: none;
+      border-bottom: 2px solid $border-color;
+      background: transparent;
+      font-size: 1rem;
+      color: $text-color;
+      transition: all 0.3s ease;
+
+      &::placeholder {
+        color: $border-color;
+        opacity: 1;
+      }
+
+      &:focus {
+        border-bottom-color: $primary-color;
+        outline: none;
+      }
+    }
+
+    .search-bar__icon {
+      position: absolute;
+      top: 50%;
+      left: 10px;
+      transform: translateY(-50%);
+      color: $border-color;
+      font-size: 1rem;
+      pointer-events: none;
+      transition: color 0.3s ease;
+    }
+
+    &:focus-within .search-bar__icon {
+      color: $primary-color;
+    }
+  }
+}

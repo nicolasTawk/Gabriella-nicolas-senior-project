@@ -20,7 +20,7 @@ router.post(
 );
 
 // Admin endpoint to delete a user by email
-router.delete("/user/email/:email", requireAdmin, deleteUserByEmail);
+router.delete("/user/username/:username", requireAdmin, deleteUserByEmail);
 
 // Admin endpoint to update a user by email (only password and role can be updated)
 router.put(

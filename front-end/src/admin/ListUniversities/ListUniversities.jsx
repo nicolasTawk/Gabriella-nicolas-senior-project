@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import api from '../../http-common';
-import Loader from '../../context/Loader/Loader';
+import Loader from '../../common/Loader/Loader';
 import './ListUniversities.scss';
 
 const Universities = () => {

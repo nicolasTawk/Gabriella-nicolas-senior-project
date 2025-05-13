@@ -1,161 +1,3 @@
-// @import '../../styles/variables';
-// @import '../../styles/mixins';
-
-// .questionnaire {
-//   padding: 2rem 1rem;
-
-//   &__title {
-//     font-size: 2rem;
-//     font-weight: 600;
-//   }
-
-//   &__description {
-//     font-size: 1rem;
-//     color: $text-color;
-//   }
-
-//   &__form {
-//     margin-top: 2rem;
-//     text-align: start;
-
-//     .questionnaire__question {
-//       font-size: 1rem;
-//       color: $primary-color !important;
-//     }
-
-//     .questionnaire-answer {
-//       @include input-style;
-//       // width: 100%;
-//       // border: none;
-//       // border-bottom: 2px solid $border-color;
-//       // background-color: transparent;
-//       // padding: 0.5rem 0;
-//       // font-size: 1rem;
-//       // color: $text-color;
-//       // transition: border-color 0.3s ease;
-
-//       // &:focus,
-//       // &:active {
-//       //   outline: none;
-//       //   border-color: $primary-color;
-//       // }
-
-//       // &::placeholder {
-//       //   color: $border-color;
-//       // }
-//     }
-
-//     .radio-group-vertical {
-//       display: flex;
-//       flex-direction: column;
-//       gap: 0.5rem;
-
-//       .custom-radio {
-//         display: flex;
-//         align-items: center;
-//         gap: 0.5rem;
-
-//         input[type='radio'] {
-//           accent-color: $primary-color;
-//         }
-
-//         input[type='radio']:checked + span {
-//           color: $primary-color;
-//           font-weight: 600;
-//         }
-
-//         span {
-//           font-size: 1rem;
-//           color: $text-color;
-//           padding-left: 1.5rem;
-//         }
-//       }
-//     }
-
-//     .number-btn-group {
-//       display: flex;
-//       gap: 0.5rem;
-
-//       .number-btn {
-//         border: 2px solid $primary-color;
-//         padding: 0.4rem 0.8rem;
-//         background: transparent;
-//         border-radius: 8px;
-//         color: $primary-color;
-//         cursor: pointer;
-//         transition: 0.3s;
-
-//         &.active,
-//         &:hover {
-//           background-color: $primary-color;
-//           color: $secondary-color;
-//         }
-//       }
-//     }
-
-//     .range-slider-group {
-//       display: flex;
-//       align-items: center;
-//       gap: 1rem;
-
-//       input[type='range'] {
-//         flex: 1;
-//         accent-color: $primary-color;
-//       }
-
-//       .range-value {
-//         font-weight: bold;
-//         color: $primary-color;
-//         min-width: 30px;
-//         text-align: center;
-//       }
-//     }
-
-
-//   }
-// }
-
-// .primary-btn {
-//   margin-top: 1.5rem;
-//   padding: 12px 24px;
-//   width: 30% !important;
-//   border-radius: $border-radius;
-//   font-size: 1.1rem;
-//   background: transparent;
-//   border: 2px solid $primary-color;
-//   color: $primary-color;
-//   transition: all 0.3s ease;
-
-//   &:hover {
-//     background-color: $primary-color;
-//     color: $secondary-color;
-//   }
-// }
-
-// .arrow-icon {
-//   font-size: 1.1rem;
-//   color: $primary-color;
-//   cursor: pointer;
-//   display: flex;
-//   align-items: center;
-//   gap: 0.5rem;
-//   margin-bottom: 1rem;
-
-//   // &:hover {
-//   //   color: $secondary-color;
-//   // }
-// }
-
-// .recommendation-box {
-//   border-left: 5px solid $primary-color;
-//   background-color: $secondary-color;
-//   padding: 1rem;
-//   border-radius: 6px;
-//   margin-top: 1rem;
-
-// }
-
-
 @import '../../styles/variables';
 @import '../../styles/mixins';
 
@@ -164,13 +6,25 @@
   position: relative;
 
   &__title {
-    font-size: 2rem;
+    font-size: $title-large;
     font-weight: 600;
+    color: $primary-color;
+
+    @include respond(tablet){
+      font-size: $title-medium;
+    }
+    @include respond(phone){
+      font-size: $title-small;
+    }
   }
 
   &__description {
-    font-size: 1rem;
+    font-size: $text-large;
     color: $text-color;
+
+    @include respond(tablet){
+      font-size: $text-medium;
+    }
   }
 
   &__form {
@@ -212,14 +66,21 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    font-size: 1.1rem;
+    font-size: $text-large;
     color: $primary-color;
     cursor: pointer;
+    @include respond(tablet){
+      font-size: $text-medium;
+    }
+   
   }
 
   &__question {
-    font-size: 1rem;
+    font-size: $text-large;
     color: $primary-color !important;
+    @include respond(tablet){
+      font-size: $text-medium;
+    }
   }
 
   &__answer-input {
@@ -246,9 +107,13 @@
       }
 
       span {
-        font-size: 1rem;
+        font-size: $text-large;
         color: $text-color;
         padding-left: 1.5rem;
+        @include respond(tablet){
+          font-size: $text-medium;
+        }
+
       }
     }
   }
@@ -316,26 +181,26 @@
 }
 
 // Shared button
-.primary-btn {
-  margin-top: 1.5rem;
-  padding: 12px 24px;
-  width: 30%;
-  border-radius: $border-radius;
-  font-size: 1.1rem;
-  background: transparent;
-  border: 2px solid $primary-color;
-  color: $primary-color;
-  transition: all 0.3s ease;
+// .primary-btn {
+//   margin-top: 1.5rem;
+//   padding: 12px 24px;
+//   width: 30%;
+//   border-radius: $border-radius;
+//   font-size: 1.1rem;
+//   background: transparent;
+//   border: 2px solid $primary-color;
+//   color: $primary-color;
+//   transition: all 0.3s ease;
 
-  &:hover {
-    background-color: $primary-color;
-    color: $secondary-color;
-  }
+//   &:hover {
+//     background-color: $primary-color;
+//     color: $secondary-color;
+//   }
 
-  @include respond(tablet){
-    width: 50%;
-  }
-  @include respond (phone){
-    width: 90%;
-  }
-}
+//   @include respond(tablet){
+//     width: 50%;
+//   }
+//   @include respond (phone){
+//     width: 90%;
+//   }
+// }

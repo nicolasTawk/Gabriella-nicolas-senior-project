@@ -1,12 +1,21 @@
 @import '../../styles/variables';
+@import '../../styles/mixins';
 
-.add-faculty-modal {
+.add-faculty {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   z-index: 2000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+
+  @include respond(phone) {
+    padding: 0;
+  }
 
   &__overlay {
     position: absolute;
@@ -16,20 +25,36 @@
 
   &__box {
     position: relative;
-    max-width: 500px;
-    margin: 5% auto;
     background: white;
     padding: 2rem;
     border-radius: 0.75rem;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
     z-index: 2100;
+    width: 100%;
+    max-width: 500px;
+
+    @include respond(phone) {
+      height: 100vh;
+      width: 100vw;
+      max-width: none;
+      border-radius: 0;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
   }
 
   &__title {
     text-align: center;
     margin-bottom: 1.5rem;
-    font-size: 1.4rem;
+    font-size: $title-medium;
     font-weight: 600;
+    color: $primary-color;
+
+    @include respond(phone) {
+      font-size: $title-small;
+    }
   }
 
   &__form {
@@ -45,6 +70,12 @@
     label {
       font-weight: 600;
       margin-bottom: 0.4rem;
+      font-size: $text-medium;
+      color: $primary-color;
+
+      @include respond(phone) {
+        font-size: $text-small;
+      }
     }
 
     input,
@@ -54,6 +85,10 @@
       border: 1px solid $border-color;
       border-radius: 0.4rem;
       outline: none;
+
+      @include respond(phone) {
+        font-size: 0.9rem;
+      }
 
       &:focus {
         border-color: $primary-color;
@@ -74,33 +109,27 @@
 
   &__buttons {
     display: flex;
-    justify-content: space-between;
+    flex-wrap: wrap;
     gap: 1rem;
 
-    button {
-      flex: 1;
-      padding: 0.6rem 1rem;
-      font-size: 1rem;
-      font-weight: 600;
-      border-radius: 0.4rem;
-      border: none;
-      cursor: pointer;
-      transition: background 0.2s ease;
+    .col-6 {
+      flex: 1 1 45%;
 
-      &:first-child {
-        background-color: $primary-color;
-        color: white;
-
-        &:hover {
-          background-color: darken($primary-color, 10%);
-        }
+      @include respond(phone) {
+        flex: 1 1 100%;
       }
+    }
 
-      &.cancel {
-        background-color: $border-color;
+    button {
+      width: 100%;
+
+        &.cancel {
+        border-color: $border-color;
+        color: darken($border-color, 10%);
 
         &:hover {
-          background-color: darken($border-color, 10%);
+          background-color: $border-color;
+          color: white;
         }
       }
     }
