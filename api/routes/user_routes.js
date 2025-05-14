@@ -6,6 +6,7 @@ const rateLimit = require("express-rate-limit");
 // Questionnaire AI workflow
 const { submitQuestionnaire } = require("../controllers/questionnaire_controller");
 const {validateQuestionnaire }  = require("../middleware/validate_questionnaire");
+const { chat } = require("../controllers/chat_controller");
 const { getActiveSchema, }     = require("../services/questionnaire_schema_service");
 const { requireAuth, requireStudent, requireUniversity } = require("../middleware/auth_middleware");
 const { getStudent, updateStudent } = require("../controllers/student_profile_controller");
@@ -111,6 +112,14 @@ router.put(
   ],
    updateStudent
 );
+
+// Student: free-form AI chat
+router.post(
+    "/chat",
+    requireAuth,
+    // expects { messages: [{ role, content }, …] }
+    chat
+  );
 
 
 
