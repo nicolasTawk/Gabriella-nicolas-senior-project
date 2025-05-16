@@ -1,11 +1,7 @@
 const router = require("express").Router();
 const { param } = require("express-validator");
 const { requireStudent } = require("../middleware/auth_middleware");
-const {
-  addFavorite,
-  listFavorites,
-  removeFavorite
-} = require("../controllers/favorite_controller");
+const { addFavorite, listFavorites, removeFavorite } = require("../controllers/favorite_controller");
 
 /**
  * POST /api/v1/favorites/:universityId

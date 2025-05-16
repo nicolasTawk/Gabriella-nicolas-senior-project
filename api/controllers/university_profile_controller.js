@@ -196,13 +196,13 @@ async function createMyMajor(req, res) {
 
   const userId = req.user.id;
   const facultyId = parseInt(req.params.facultyId, 10);
-  const { name, code, description, tuition_fee } = req.body;
+  const { name, code, description, tuition_fee, number_of_credits  } = req.body;
   try {
     const faculty = await Faculty.findOne({
       where: { id: facultyId, university_profile_id: userId },
     });
     if (!faculty) return res.status(404).json({ error: "Faculty not found" });
-    const major = await Major.create({ faculty_id: facultyId, name, code, description, tuition_fee });
+    const major = await Major.create({ faculty_id: facultyId, name, code, description, tuition_fee , number_of_credits});
     res.status(201).json({ major });
   } catch (err) {
     console.error(err);
