@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import api from '../../http-common';
 import Loader from '../../common/Loader/Loader';
-import AddFaculty from '../../modals/AddFaculty/AddFaculty';
+import AddFaculty from '../../modals/university/AddFaculty/AddFaculty';
 import { Pencil, Trash } from 'lucide-react';
 import SearchBar from '../../common/SearchBar/SearchBar';
 import './Faculties.scss';

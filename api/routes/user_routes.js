@@ -1,6 +1,6 @@
 const express = require("express");
 const { registerUser, loginUser } = require("../controllers/user_login");
-const { updateSelf, deleteSelf } = require("../controllers/user_managment");
+const { updateProfileSelf, changeMyPassword, deleteSelf } = require("../controllers/user_managment");
 const { body } = require("express-validator");
 const rateLimit = require("express-rate-limit");
 // Questionnaire AI workflow
@@ -71,16 +71,26 @@ router.post(
 router.get("/questionnaire/schema/:version?", getSchema);
 
 
-
-// Protected route for updating your own account (user can change full_name and/or password)
+// Protected: update own username/email
 router.put(
   "/me/update",
   requireAuth,
   [
-    body("full_name").optional().trim().escape(),
-    body("password").optional().isLength({ min: 5 }).withMessage("Password must be at least 5 characters if provided."),
+    body("username").optional().trim().isLength({ min: 3, max: 40 }).withMessage("Username must be 3-40 characters."),
+    body("email").optional().isEmail().normalizeEmail()
   ],
-  updateSelf
+  updateProfileSelf
+);
+
+// Protected: change own password
+router.put(
+  "/me/change-password",
+  requireAuth,
+  [
+    body("old_password").notEmpty().withMessage("Old password is required."),
+    body("new_password").isLength({ min: 5 }).withMessage("New password must be at least 5 characters.")
+  ],
+  changeMyPassword
 );
 
 // Protected route for deleting your own account

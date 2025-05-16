@@ -1,0 +1,270 @@
+// @import '../../../styles/variables';
+// @import '../../../styles/mixins';
+
+// .uni-info {
+//     &__back-btn {
+//         position: sticky;
+//         top: 0;
+//         background: $background-color;
+//         z-index: 10;
+//         padding-bottom: 0.5rem;
+//         border: 0;
+//         display: flex;
+//         align-items: center;
+//         gap: 0.5rem;
+//         font-size: $text-large;
+//         color: $primary-color;
+//         cursor: pointer;
+//         @include respond(tablet){
+//           font-size: $text-medium;
+//         }
+       
+//       }
+//   &__name {
+//     position: sticky;
+//     top: 0;
+//     color: $primary-color;
+//     font-size: $title-large;
+//     text-transform: uppercase;
+//     font-weight: bold;
+
+//     @include respond(small-tablet){
+//         text-align: center;
+//         font-size: $title-medium;
+//     }
+//   }
+
+//   &__logo {
+//     max-width: 50%;
+//     border-radius: 0.5rem;
+//     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+//     @include respond(desktop){
+//         max-width: 65%;
+//     }
+
+//     @include respond(big-tablet){
+//         max-width: 80%;
+//     }
+//     @include respond(small-tablet){
+//         max-width: 60%;
+//     }
+//     @include respond(phone){
+//         max-width: 100%;
+//     }
+//   }
+
+//   &__details {
+//     font-size: $text-medium;
+
+//     li {
+//       margin-bottom: 1.5rem;
+
+//       strong {
+//         color: $primary-color;
+//         font-size: $text-large;
+
+//         @include respond(small-tablet){
+//             font-size: $text-medium;
+//         }
+//       }
+
+//       a {
+//         color: darken($primary-color, 10%);
+//         text-decoration: none;
+//         font-size: $text-medium;
+
+//         &:hover {
+//           text-decoration: underline;
+//         }
+//       }
+
+//       p {
+//         color: darken($primary-color, 10%);
+//         text-decoration: none;
+//         font-size: $text-medium;
+//         display: ruby;
+
+//       }
+//     }
+//   }
+
+//   &__section-title {
+//     font-size: $title-medium;
+//     color: $primary-color;
+//     text-align: left;
+//     @include respond(small-tablet){
+//         font-size: $title-small;
+//         text-align: center;
+//     }
+//   }
+
+//   &__faculties-table th,
+//   &__faculties-table td {
+//     vertical-align: middle;
+//   }
+
+//   &__faculty-row {
+//     cursor: pointer;
+//     transition: background 0.2s;
+
+//     &:hover {
+//       background: lighten($primary-color, 46%);
+//     }
+//   }
+
+//   &__error {
+//     color: $danger-color;
+//   }
+// }
+
+
+
+
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
+.uni-info {
+  // — Sticky header row (back + title)
+  &__header {
+    // position: sticky;
+    top: 0;
+    background: $background-color;
+    z-index: 10;
+    padding: 0.5rem 0;
+    // display: flex;
+    gap: 1rem;
+    // align-items: center;
+
+    @include respond(small-tablet) {
+    //   flex-direction: column;
+      text-align: center;
+    }
+  }
+
+  &__back-btn {
+    border: none;
+    background: none;
+    color: $primary-color;
+    font-size: $text-large;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+
+    &:hover { text-decoration: underline; }
+
+    @include respond(tablet) {
+      font-size: $text-medium;
+    }
+  }
+  &__back-icon { font-size: 1.2em; }
+
+  &__name {
+    margin: 0;
+    color: $primary-color;
+    font-size: $title-large;        
+    text-transform: uppercase;
+    font-weight: bold;
+
+    @include respond(small-tablet) {
+      font-size: $title-medium;
+      text-align: center;
+    }
+  }
+
+  // — University details
+  &__logo {
+    max-width: 50%;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+
+    @include respond(phone) {
+      max-width: 100%;
+    }
+  }
+
+  &__details {
+    font-size: $text-medium;
+
+    li {
+      margin-bottom: 1rem;
+
+      strong {
+        color: $primary-color;
+        font-size: $text-large;
+
+        @include respond(small-tablet) { font-size: $text-medium; }
+      }
+
+      a {
+        color: darken($primary-color, 10%);
+        text-decoration: none;
+
+        &:hover { text-decoration: underline; }
+      }
+
+      span {
+        color: darken($primary-color, 10%);
+      }
+    }
+  }
+
+  &__section-title {
+    font-size: $title-medium;
+    color: $primary-color;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+
+    @include respond(small-tablet) {
+      font-size: $title-small;
+      text-align: center;
+    }
+  }
+
+  // — Table wrapper (scroll + shadow + rounded)
+  &__table-wrapper {
+    max-height: 60vh;
+    overflow-y: auto;
+    margin-bottom: 2rem;
+    border-radius: $border-radius;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+  }
+
+  // — Table styling
+  &__faculties-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    thead {
+      position: sticky;
+      top: 0;
+      background-color: $primary-color;
+      color: white;
+      z-index: 1;
+    }
+
+    th,
+    td {
+      padding: 0.75rem;
+      text-align: left;
+    }
+
+    tbody tr:nth-child(even) { background-color: $secondary-color; }
+    tbody tr:nth-child(odd)  { background-color: white; }
+  }
+
+  &__faculty-row {
+    cursor: pointer;
+    transition: background 0.2s;
+
+    &:hover {
+      background: lighten($primary-color, 46%);
+    }
+  }
+
+  &__error {
+    color: $danger-color;
+    text-align: center;
+    margin-top: 2rem;
+  }
+}

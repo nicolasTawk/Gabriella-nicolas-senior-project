@@ -4,11 +4,19 @@ const {
   listUniversities,
   getUniversityProfile,
   listUniversityFaculties,
-  listFacultyMajors
+  listFacultyMajors,
+  searchUniversitiesByMajor
 } = require("../controllers/university_public_controller");
-const { param } = require("express-validator");
+const { param, query } = require("express-validator");
 
 const router = express.Router();
+
+// 0. Search universities by major
+router.get(
+  "/universities/search",
+  [query("major").notEmpty().withMessage("major query param is required")],
+  searchUniversitiesByMajor
+);
 
 // 1. List all universities
 router.get("/universities", listUniversities);

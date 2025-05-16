@@ -23,6 +23,11 @@ const Major = sequelize.define(
       type: DataTypes.STRING(200),
       allowNull: false,
     },
+
+    number_of_credits:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
     code: {
       type: DataTypes.STRING(20),
       allowNull: false,
@@ -30,6 +35,12 @@ const Major = sequelize.define(
     description: {
       type: DataTypes.TEXT,
       allowNull: true,
+    },
+    tuition_fee: {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: false,
+      defaultValue: 0.00,
+      comment: "Yearly tuition fee for this major",
     },
   },
   {

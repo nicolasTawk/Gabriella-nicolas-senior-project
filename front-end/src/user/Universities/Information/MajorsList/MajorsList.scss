@@ -1,25 +1,24 @@
-@import '../../styles/variables';
-@import '../../styles/mixins';
+// src/user/Majors/Majors.scss
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins';
 
-.major {
+.majors {
   width: 100%;
   padding: 1rem;
 
-  &__header {
-    margin-bottom: 1.5rem;
-  }
-
-  &__add-btn {
-    margin-top: 0 !important;
-    width: 40%;
-
-    @include respond(tablet) {
-      width: auto;
-    }
+  &__title {
+    font-size: $title-large;
+    font-weight: bold;
+    color: $primary-color;
+    margin-bottom: 2rem;
 
     @include respond(phone) {
-      width: 100%;
+      font-size: $title-medium;
     }
+  }
+
+  &__header {
+    margin-bottom: 1.5rem;
   }
 
   &__error {
@@ -63,29 +62,12 @@
     }
   }
 
-  &__actions {
-    display: flex;
-    gap: 0.75rem;
+  &__row {
+    cursor: default;
+    transition: background 0.2s;
 
-    .faculty__icon {
-      cursor: pointer;
-      transition: color 0.2s ease;
-
-      &.edit {
-        color: $primary-color !important;
-
-        &:hover {
-          color: darken($primary-color, 10%);
-        }
-      }
-
-      &.delete {
-        color: $danger-color !important;
-
-        &:hover {
-          color: darken($danger-color, 10%);
-        }
-      }
+    &:hover {
+      background: lighten($primary-color, 46%);
     }
   }
 

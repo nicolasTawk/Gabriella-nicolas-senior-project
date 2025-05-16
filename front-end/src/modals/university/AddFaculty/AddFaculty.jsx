@@ -179,9 +179,9 @@
 
 
 import React, { useState, useEffect } from 'react';
-import api from '../../http-common';
+import api from '../../../http-common';
 import './AddFaculty.scss';
-import '../../styles/style.scss';
+import '../../../styles/style.scss';
 
 
 const AddFaculty = ({ onClose, onAdd, faculty }) => {

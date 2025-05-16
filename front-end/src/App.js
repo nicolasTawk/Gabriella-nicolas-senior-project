@@ -13,8 +13,8 @@ import UniversityProfile from './university/UniversityProfile/UniversityProfile'
 import CreateUniversity from './admin/CreateUniversity/CreateUniversity';
 import ListUniversities from './admin/ListUniversities/ListUniversities';
 import Majors from './university/Majors/Majors'
-
-
+import UniversityInfo from './user/Universities/Information/Information'
+import FacultyMajors from './user/Universities/Information/MajorsList/MajorsList'
 const App = () => {
   const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -46,6 +46,8 @@ const App = () => {
           <Route path="/universityProfile" element={<UniversityProfile />}/>
           <Route path="/createUniversity" element ={<CreateUniversity/>}/>          
           <Route path="/listUniversities" element ={<ListUniversities/>}/>
+          <Route path="/universities/:id" element ={<UniversityInfo/>}/>
+          <Route path="/faculties/:id/majors" element ={<FacultyMajors/>}/>
 
         </Routes>
       </main>

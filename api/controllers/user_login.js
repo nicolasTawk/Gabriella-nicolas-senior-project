@@ -84,6 +84,10 @@ const loginUser = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
+    if(!user.approved){
+      return res.status(401).json({ error: "User has been temporairley banned" });
+    }
+
     // Validate password
     const validPassword = await user.validPassword(password);
     if (!validPassword) {

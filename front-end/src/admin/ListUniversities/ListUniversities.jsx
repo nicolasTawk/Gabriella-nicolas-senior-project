@@ -1,85 +1,131 @@
 import React, { useEffect, useState } from 'react';
 import api from '../../http-common';
-import Loader from '../../common/Loader/Loader';
+import ChangePasswordModal from '../../modals/admin/ChangePassword/ChangePassword';
+import { FaSearch, FaBan, FaTrash, FaKey, FaUnlock } from 'react-icons/fa';
 import './ListUniversities.scss';
 
 const Universities = () => {
-  const [universities, setUniversities] = useState([]);
+  const [unis, setUnis] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [pwdModal, setPwdModal] = useState({ open: false, userId: null });
+
+  const fetchUnis = async () => {
+    try {
+      const res = await api.get('/admin/universities'); // :contentReference[oaicite:0]{index=0}:contentReference[oaicite:1]{index=1}
+      setUnis(res.data.universities);
+    } catch (err) {
+      console.error('Error fetching universities:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchUniversities = async () => {
-      try {
-        console.log('🌐 Fetching from /public/universities...');
-        const res = await api.get('/public/universities');
-        console.log('✅ Received universities:', res.data.universities);
-        setUniversities(res.data.universities || []);
-      } catch (err) {
-        console.error('❌ Error fetching universities:', err);
-        setError('Failed to load universities.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUniversities();
+    fetchUnis();
   }, []);
 
-  const filtered = universities.filter(u =>
-    u.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const handleBanToggle = async (id, approved) => {
+    try {
+      if (approved) {
+        await api.put(`/admin/users/${id}/ban`); // :contentReference[oaicite:2]{index=2}:contentReference[oaicite:3]{index=3}
+      } else {
+        await api.put(`/admin/users/${id}/unban`);
+      }
+      fetchUnis();
+    } catch (err) {
+      console.error('Error toggling ban:', err);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this account?')) return;
+    try {
+      await api.delete(`/admin/users/${id}`);
+      fetchUnis();
+    } catch (err) {
+      console.error('Error deleting user:', err);
+    }
+  };
+
+  const filtered = unis.filter(u =>
+    u.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    u.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
-    <div className="admin-universities">
-      <div className="admin-universities__header">
-        <h2 className="admin-universities__title">All Universities</h2>
-        <input
-          type="text"
-          className="admin-universities__search"
-          placeholder="Search by name..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+    <div className="universities">
+      <div className="universities__header">
+        <h2 className="universities__title">Universities</h2>
+        <div className="universities__actions">
+          <div className="universities__search-group">
+            <FaSearch className="universities__icon" />
+            <input
+              type="text"
+              className="universities__search"
+              placeholder="Search universities..."
+              value={searchTerm}
+              onChange={e => setSearchTerm(e.target.value)}
+            />
+          </div>
+        </div>
       </div>
 
-      {loading && <Loader />}
-      {error && <p className="admin-universities__error">{error}</p>}
-
-      {!loading && !error && (
-        <table className="admin-universities__table">
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <table className="universities__table">
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Location</th>
-              <th>Website</th>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Approved?</th>
+              <th>Created At</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {filtered.length > 0 ? (
-              filtered.map((uni) => (
-                <tr key={uni.user_id}>
-                  <td>{uni.name}</td>
-                  <td>{uni.location || '—'}</td>
-                  <td>
-                    {uni.website ? (
-                      <a href={uni.website} target="_blank" rel="noreferrer">
-                        {uni.website}
-                      </a>
-                    ) : '—'}
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="3" className="admin-universities__empty">
-                  No universities found.
+            {filtered.map(u => (
+              <tr key={u.id}>
+                <td>{u.username}</td>
+                <td>{u.email}</td>
+                <td>{u.approved ? 'Yes' : 'No'}</td>
+                <td>{new Date(u.createdAt).toLocaleDateString()}</td>
+                <td className="universities__btn-cell">
+                  <button
+                    className="universities__btn"
+                    onClick={() => handleBanToggle(u.id, u.approved)}
+                    title={u.approved ? 'Ban' : 'Unban'}
+                  >
+                    {u.approved ? <FaBan/> : <FaUnlock/>}
+                  </button>
+                  <button
+                    className="universities__btn"
+                    onClick={() => setPwdModal({ open: true, userId: u.id })}
+                    title="Change Password"
+                  >
+                    <FaKey/>
+                  </button>
+                  <button
+                    className="universities__btn"
+                    onClick={() => handleDelete(u.id)}
+                    title="Delete"
+                  >
+                    <FaTrash/>
+                  </button>
                 </td>
               </tr>
-            )}
+            ))}
           </tbody>
         </table>
+      )}
+
+      {pwdModal.open && (
+        <ChangePasswordModal
+          userId={pwdModal.userId}
+          onClose={() => setPwdModal({ open: false, userId: null })}
+          onSuccess={fetchUnis}
+        />
       )}
     </div>
   );
