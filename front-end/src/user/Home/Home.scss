@@ -2,162 +2,195 @@
 @import '../../styles/mixins';
 
 .homepage {
-  background: $secondary-color;
-  padding-top: 2rem;
+  // Hero
+  &__hero {
+    background: linear-gradient(135deg, darken($primary-color, 10%), $primary-color);
+    color: white;
+    padding: 6rem 0;
 
-  &__intro {
-    .row {
-      margin-bottom: 2rem;
+    &-content {
+      max-width: 600px;
+      margin: 0 auto;
     }
+
     &-logo {
-      width: 120px;
-      @include respond(phone) { width: 80px; }
+      width: 60%;
+      margin-bottom: 1.5rem;
     }
+
     &-title {
       font-size: $title-large;
-      color: $primary-color;
-      font-weight: 700;
-      @include respond(tablet) { font-size: $title-medium; }
+      font-weight: 800;
+      margin-bottom: 1rem;
+      color: $secondary-color;
+
+      @include respond(tablet) {
+        font-size: $title-medium;
+      }
+      // @include respond(phone) {
+      //   font-size: 2rem;
+      // }
     }
-    &-slogan {
+
+    &-subtitle {
       font-size: $text-large;
-      color: $text-color;
-      margin-top: 0.5rem;
-      @include respond(tablet) { font-size: $text-medium; }
-    }
-  }
-
-  &__section-title {
-    font-size: $title-large;
-    color: $primary-color;
-    margin-bottom: 1.5rem;
-    @include respond(tablet) { font-size: $title-medium; }
-  }
-
-  &__carousel {
-    margin-bottom: 3rem;
-
-    &-slider {
-      .slick-dots { bottom: -20px; }
-    }
-    &-slide {
-      padding: 0 1rem;
-    }
-    &-image {
-      width: 100%;
-      height: 400px;
-      object-fit: cover;
-      border-radius: $border-radius;
-      @include respond(tablet) { height: 250px; }
-    }
-  }
-
-  &__stats {
-    &-grid {
-      justify-content: center;
-      gap: 2rem;
       margin-bottom: 2rem;
     }
-    &-stat {
-      background: #fff;
-      padding: 2rem 1rem;
-      border-radius: $border-radius;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  }
+
+  &__cta-btn {
+    margin-top: 1rem;
+    padding: 0.75rem 2rem;
+    font-size: $text-medium;
+    font-weight: 700;
+    color: $secondary-color !important;
+    border-color: $secondary-color !important;
+    text-decoration: none;
+
+    a {
+      text-decoration: none;
+      color: $secondary-color !important;
+
     }
-    &-count {
-      font-size: 2.5rem;
-      color: $primary-color;
-      font-weight: 700;
-    }
-    &-title {
-      font-size: $text-large;
-      margin-top: 0.5rem;
-      color: $text-color;
+    @include respond(phone) {
+      font-size: $text-small;
     }
   }
 
+  // Carousel
+  &__carousel {
+    padding: 4rem 0;
+    .homepage__section-title { margin-bottom: 2rem; }
+    .homepage__carousel-slider {
+      .slick-slide img {
+        width: 100%;
+        height: 60vh;
+        object-fit: cover;
+        border-radius: $border-radius;
+      }
+    }
+  }
+
+  // — Stats
   &__about {
-    margin-bottom: 3rem;
-    height: 30vh;
-    .row {
-      justify-content: center;
-    }
-  }
+    opacity: 0;
+    transform: translateY(2rem);
+    transition: all 0.8s ease-out;
 
-  &__features {
-    margin-bottom: 3rem;
-    .homepage__feature {
-      background: $primary-color;
-      color: $secondary-color;
-      padding: 1rem;
+    &.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    &-grid {
+      display: grid;
+      gap: 2rem;
+
+      @include respond(tablet) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      @include respond(phone) {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    &-card {
+      background: $background-color;
       border-radius: $border-radius;
-      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      padding: 2rem;
       text-align: center;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-      transition: transform 0.3s;
-      min-height: 8rem;
-      &:hover { transform: translateY(-4px); }
-    }
-  }
-
-  &__future {
-    margin-bottom: 3rem;
-    &-list {
-      justify-content: center;
-      gap: 1.5rem;
-    }
-    &-item {
-      background: $primary-color;
-      color: $secondary-color;
-      padding: 1rem;
-      border-radius: $border-radius;
-      font-weight: 600;
-      text-align: center;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-      transition: transform 0.3s;
-      min-height: 8rem;
-      &:hover { transform: scale(1.03); }
-    }
-  }
-
-  &__contact {
-    background: #f9f9f9;
-    padding: 2rem 1rem;
-    border-radius: $border-radius;
-    margin-bottom: 2rem;
-
-    & .homepage__form {
-      max-width: 500px;
-      margin: 0 auto 2rem;
+      height: 100%;
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      align-items: center;
+      justify-content: flex-start;
+
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      }
     }
 
-    &-info {
-      p { margin: 0.5rem 0; color: $text-color; }
+    &-icon {
+      font-size: 2.5rem;
+      color: $primary-color;
+      margin-bottom: 1rem;
     }
 
-    &__input,
-    &__textarea {
-      width: 100%;
-      padding: 0.75rem;
-      border: 1px solid $border-color;
-      border-radius: $border-radius;
+    &-title {
       font-size: $text-large;
-      &:focus { outline: none; border-color: $primary-color; }
+      color: $primary-color;
+      margin-bottom: 0.5rem;
     }
 
-    &__button {
-      background: $primary-color;
-      color: #fff;
-      border: none;
-      padding: 0.75rem;
-      border-radius: $border-radius;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.3s;
-      &:hover { background: darken($primary-color, 8%); }
+    &-text {
+      font-size: $text-medium;
+      color: darken($text-color, 20%);
+      line-height: 1.5;
+      flex: 1;
     }
+  }
+
+
+  // — Future Plans
+  &__future {
+    padding: 4rem 0;
+    background-color: lighten($secondary-color, 30%);
+    .homepage__section-title { margin-bottom: 2rem; }
+    &-grid {
+      .homepage__future-card {
+        background: white;
+        border-radius: $border-radius;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        padding: 1.5rem;
+        font-size: $text-medium;
+        margin-bottom: 1.5rem;
+      }
+    }
+  }
+
+  // — Contact
+  &__contact {
+    padding: 4rem 0;
+    .homepage__section-title { margin-bottom: 2rem; }
+    .homepage__form {
+      display: flex;
+      flex-direction: column;
+      .homepage__input,
+      .homepage__textarea {
+        @include input-style;
+        margin-bottom: 1rem;
+      }
+      .homepage__button {
+        width: 100%;
+        font-size: $text-large;
+      }
+    }
+    &-info {
+      padding-top: 1rem;
+      p {
+        font-size: $text-medium;
+        margin-bottom: 0.75rem;
+      }
+    }
+  }
+
+  // Responsive tweaks
+  @include respond(tablet) {
+    &__hero {
+      height: 60vh;
+      .homepage__hero-title { font-size: $title-large; }
+    }
+    &__carousel .slick-slide img { height: 300px; }
+  }
+
+  @include respond(phone) {
+    &__hero {
+      height: 50vh;
+      .homepage__hero-title { font-size: $title-medium; }
+    }
+    &__carousel .slick-slide img { height: 200px; }
+    &__stats-grid .col-6 { margin-bottom: 2rem; }
   }
 }

@@ -1,0 +1,59 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.create-admin {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+
+  &__title {
+    font-size: $title-large;
+    font-weight: bold;
+    color: $primary-color;
+    text-align: start;
+    margin-bottom: 1.5rem;
+
+    @include respond(tablet) {
+      font-size: $title-medium;
+    }
+
+    @include respond(phone) {
+      font-size: $title-small;
+    }
+  }
+
+  &__form {
+    border-radius: $border-radius;
+  }
+
+  &__group {
+    display: flex;
+    flex-direction: column;
+
+    label {
+      font-weight: bold;
+      color: $primary-color;
+      margin-bottom: 0.4rem;
+      font-size: $text-large;
+
+      @include respond(tablet) {
+        font-size: $text-medium;
+      }
+    }
+
+    input {
+      @include input-style;
+
+      &:focus,
+      &:active {
+        color: $primary-color;
+      }
+    }
+  }
+
+  &__message {
+    text-align: center;
+    margin: 1rem 0;
+    font-weight: bold;
+    color: $danger-color;
+  }
+}

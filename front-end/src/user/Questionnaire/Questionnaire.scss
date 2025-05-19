@@ -56,7 +56,13 @@
     padding-top: 1rem;
     text-align: center;
   }
-
+  &__history {
+    margin-top: 2rem;
+    h5 {
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+  }
   &__back-btn {
     position: sticky;
     top: 0;
@@ -180,27 +186,5 @@
   }
 }
 
-// Shared button
-// .primary-btn {
-//   margin-top: 1.5rem;
-//   padding: 12px 24px;
-//   width: 30%;
-//   border-radius: $border-radius;
-//   font-size: 1.1rem;
-//   background: transparent;
-//   border: 2px solid $primary-color;
-//   color: $primary-color;
-//   transition: all 0.3s ease;
 
-//   &:hover {
-//     background-color: $primary-color;
-//     color: $secondary-color;
-//   }
 
-//   @include respond(tablet){
-//     width: 50%;
-//   }
-//   @include respond (phone){
-//     width: 90%;
-//   }
-// }

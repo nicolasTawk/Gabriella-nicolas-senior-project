@@ -1,270 +1,208 @@
-// @import '../../../styles/variables';
-// @import '../../../styles/mixins';
-
-// .uni-info {
-//     &__back-btn {
-//         position: sticky;
-//         top: 0;
-//         background: $background-color;
-//         z-index: 10;
-//         padding-bottom: 0.5rem;
-//         border: 0;
-//         display: flex;
-//         align-items: center;
-//         gap: 0.5rem;
-//         font-size: $text-large;
-//         color: $primary-color;
-//         cursor: pointer;
-//         @include respond(tablet){
-//           font-size: $text-medium;
-//         }
-       
-//       }
-//   &__name {
-//     position: sticky;
-//     top: 0;
-//     color: $primary-color;
-//     font-size: $title-large;
-//     text-transform: uppercase;
-//     font-weight: bold;
-
-//     @include respond(small-tablet){
-//         text-align: center;
-//         font-size: $title-medium;
-//     }
-//   }
-
-//   &__logo {
-//     max-width: 50%;
-//     border-radius: 0.5rem;
-//     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-//     @include respond(desktop){
-//         max-width: 65%;
-//     }
-
-//     @include respond(big-tablet){
-//         max-width: 80%;
-//     }
-//     @include respond(small-tablet){
-//         max-width: 60%;
-//     }
-//     @include respond(phone){
-//         max-width: 100%;
-//     }
-//   }
-
-//   &__details {
-//     font-size: $text-medium;
-
-//     li {
-//       margin-bottom: 1.5rem;
-
-//       strong {
-//         color: $primary-color;
-//         font-size: $text-large;
-
-//         @include respond(small-tablet){
-//             font-size: $text-medium;
-//         }
-//       }
-
-//       a {
-//         color: darken($primary-color, 10%);
-//         text-decoration: none;
-//         font-size: $text-medium;
-
-//         &:hover {
-//           text-decoration: underline;
-//         }
-//       }
-
-//       p {
-//         color: darken($primary-color, 10%);
-//         text-decoration: none;
-//         font-size: $text-medium;
-//         display: ruby;
-
-//       }
-//     }
-//   }
-
-//   &__section-title {
-//     font-size: $title-medium;
-//     color: $primary-color;
-//     text-align: left;
-//     @include respond(small-tablet){
-//         font-size: $title-small;
-//         text-align: center;
-//     }
-//   }
-
-//   &__faculties-table th,
-//   &__faculties-table td {
-//     vertical-align: middle;
-//   }
-
-//   &__faculty-row {
-//     cursor: pointer;
-//     transition: background 0.2s;
-
-//     &:hover {
-//       background: lighten($primary-color, 46%);
-//     }
-//   }
-
-//   &__error {
-//     color: $danger-color;
-//   }
-// }
-
-
-
-
+/* src/user/UniversityInformation/Information.scss */
 @import '../../../styles/variables';
 @import '../../../styles/mixins';
+@import '../../../styles/style.scss';
 
 .uni-info {
-  // — Sticky header row (back + title)
+  // Header
   &__header {
-    // position: sticky;
-    top: 0;
-    background: $background-color;
-    z-index: 10;
+    position: relative;
     padding: 0.5rem 0;
-    // display: flex;
-    gap: 1rem;
-    // align-items: center;
-
-    @include respond(small-tablet) {
-    //   flex-direction: column;
-      text-align: center;
-    }
+    @include respond(small-tablet) { text-align: center; }
   }
 
+    &__avg-rating {
+    margin-top: 0.5rem;
+  }
+  &__avg-label {
+    font-weight: bold;
+    margin-right: 0.5rem;
+  }
+  &__avg-stars {
+    display: inline-flex;
+    gap: 0.25rem;
+    vertical-align: middle;
+  }
+  &__avg-star {
+    font-size: 1rem;
+    color: $border-color;
+  }
+  &__avg-star--filled {
+    color: $primary-color;
+  }
+  &__avg-value {
+    margin-left: 0.25rem;
+    font-size: $text-small;
+    color: darken($text-color, 30%);
+  }
   &__back-btn {
-    border: none;
     background: none;
+    border: none;
     color: $primary-color;
     font-size: $text-large;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
     cursor: pointer;
-
     &:hover { text-decoration: underline; }
-
-    @include respond(tablet) {
-      font-size: $text-medium;
-    }
+    @include respond(tablet) { font-size: $text-medium; }
   }
   &__back-icon { font-size: 1.2em; }
-
   &__name {
     margin: 0;
     color: $primary-color;
-    font-size: $title-large;        
+    font-size: $title-large;
     text-transform: uppercase;
     font-weight: bold;
-
     @include respond(small-tablet) {
       font-size: $title-medium;
-      text-align: center;
     }
   }
+  &__rating-average {
+    display: flex;
+    align-items: center;
+    font-size: $text-large;
+    color: $primary-color;
+    svg { margin-right: 0.25rem; }
+  }
 
-  // — University details
+  // Logo & Details
   &__logo {
     max-width: 50%;
     border-radius: 0.5rem;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-
-    @include respond(phone) {
-      max-width: 100%;
-    }
+    @include respond(phone) { max-width: 100%; }
   }
-
   &__details {
     font-size: $text-medium;
-
-    li {
-      margin-bottom: 1rem;
-
-      strong {
-        color: $primary-color;
-        font-size: $text-large;
-
-        @include respond(small-tablet) { font-size: $text-medium; }
-      }
-
-      a {
-        color: darken($primary-color, 10%);
-        text-decoration: none;
-
-        &:hover { text-decoration: underline; }
-      }
-
-      span {
-        color: darken($primary-color, 10%);
-      }
+    li { margin-bottom: 1rem;
+      strong { color: $primary-color; font-size: $text-large; }
+      a { color: darken($primary-color,10%); &:hover{ text-decoration: underline; } }
     }
   }
 
-  &__section-title {
-    font-size: $title-medium;
-    color: $primary-color;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-
-    @include respond(small-tablet) {
-      font-size: $title-small;
-      text-align: center;
-    }
-  }
-
-  // — Table wrapper (scroll + shadow + rounded)
+  // Faculties Table
   &__table-wrapper {
     max-height: 60vh;
     overflow-y: auto;
     margin-bottom: 2rem;
     border-radius: $border-radius;
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 8px rgba(0,0,0,0.3);
   }
 
-  // — Table styling
-  &__faculties-table {
-    width: 100%;
-    border-collapse: collapse;
+  // Reviews & Rating Section
+  &__rating-section {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+    background: #fff;
+    border: 1px solid $border-color;
+    border-radius: $border-radius;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
-    thead {
-      position: sticky;
-      top: 0;
-      background-color: $primary-color;
-      color: white;
-      z-index: 1;
+    &-user {
+      font-size: $text-large;
+      font-weight: bold;
+      color: $primary-color;
+      margin-bottom: 1rem;
+      text-align: center;
     }
-
-    th,
-    td {
-      padding: 0.75rem;
-      text-align: left;
+    &-stars {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      font-size: $title-medium;
+      color: $primary-color;
+      cursor: pointer;
     }
+    &-comment {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 1rem;
 
-    tbody tr:nth-child(even) { background-color: $secondary-color; }
-    tbody tr:nth-child(odd)  { background-color: white; }
+      textarea {
+        @include input-style;
+        resize: vertical;
+        min-height: 80px;
+        margin-bottom: 0.5rem;
+      }
+      button {
+        align-self: flex-end;
+       
+      }
+    }
+    &-view-btn {
+      margin-top: 1rem;
+     
+    }
   }
 
-  &__faculty-row {
-    cursor: pointer;
-    transition: background 0.2s;
-
-    &:hover {
-      background: lighten($primary-color, 46%);
-    }
-  }
-
+  // Error
   &__error {
     color: $danger-color;
     text-align: center;
     margin-top: 2rem;
+  }
+}
+
+.review-box {
+  background-color: $secondary-color;
+  border-radius:   $border-radius;
+  box-shadow:      0 4px 12px rgba(0, 0, 0, 0.1);
+  padding:         1rem;
+  margin-bottom: 1rem;
+
+  &__title {
+    font-size: $text-large;
+    color: $primary-color;
+    text-align: center;
+    margin-bottom: 0.75rem;
+  }
+
+  &__existing {
+    background: $secondary-color;
+    padding: 1rem;
+    border-radius: $border-radius;
+    text-align: center;
+  }
+
+  &__stars {
+    display: flex;
+    justify-content: center;
+    gap: 0.25rem;
+    margin-bottom: 0.75rem;
+  }
+
+  &__star--filled {
+    color: $primary-color;
+  }
+
+  &__comment {
+    margin-top: 0.5rem;
+  }
+
+  &__input {
+    @include input-style;
+    resize: vertical;
+    margin: 1rem 0;
+  }
+
+  &__stars-input {
+    display: flex;
+    justify-content: center;
+    gap: 0.25rem;
+    margin-bottom: 0.75rem;
+  }
+
+  &__star {
+    font-size: 1.5rem;
+    color: $border-color;
+    cursor: pointer;
+    transition: color 0.2s;
+
+    &--filled {
+      color: $primary-color;
+    }
   }
 }

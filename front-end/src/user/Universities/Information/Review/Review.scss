@@ -1,0 +1,136 @@
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins';
+
+.univ-rev {
+  width: 100%;
+  &__back {
+    position: sticky;
+    top: 0;
+    background: $background-color;
+    z-index: 10;
+    padding-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: $text-large;
+    color: $primary-color;
+    cursor: pointer;
+    border: 0;
+    @include respond(tablet){
+      font-size: $text-medium;
+    }
+  }
+
+  &__title {
+    font-size: $title-large;
+    color: $primary-color;
+  }
+
+  &__filter-icon {
+    font-size: 1.5rem;
+    color: $primary-color;
+    cursor: pointer;
+  }
+
+  &__filter-menu {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    margin-top: 0.5rem;
+    background: $background-color;
+    border-radius: $border-radius;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    list-style: none;
+    padding: 0.5rem 0;
+    z-index: 10;
+  }
+  &__filter-item {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    &:hover { background: $secondary-color; }
+  }
+
+  &__user{ 
+    font-size: $text-medium;
+    font-weight: bold;
+    color: $primary-color !important;
+  }
+
+  &__card {
+    background: white;
+    border-radius: $border-radius;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    padding: 1rem;
+    width: 100%;
+  }
+
+  &__star {
+    font-size: 1rem;
+    color: $border-color;
+    &--filled {
+      color: $primary-color;
+    }
+  }
+
+  &__actions {
+    margin-top: 0.5rem;
+  }
+
+  &__btn {
+    background: transparent;
+    border: 2px solid $primary-color;
+    border-radius: $border-radius;
+    padding: 0.25rem 1rem;
+    color: $primary-color;
+    font-size: $text-small;
+    cursor: pointer;
+    &:hover { background: $primary-color; color: white; }
+  }
+
+  &__icon {
+    margin-left: 0.75rem;
+    font-size: 1.2rem;
+    color: $primary-color;
+    cursor: pointer;
+    &--filled {
+      color: darken($primary-color, 10%);
+    }
+  }
+
+  &__reply-box {
+    margin-top: 0.75rem;
+  }
+  &__reply-input {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: $text-small;
+    border: 1px solid $border-color;
+    border-radius: $border-radius;
+    resize: vertical;
+    margin-bottom: 0.5rem;
+  }
+  &__reply-submit {
+    @include respond(phone) { width: 100%; }
+    background: $primary-color;
+    color: white;
+    border: none;
+    border-radius: $border-radius;
+    padding: 0.5rem 1rem;
+    font-size: $text-small;
+    cursor: pointer;
+    &:hover { background: darken($primary-color,10%); }
+    &:disabled { background: $border-color; cursor: not-allowed; }
+  }
+
+  &__thread {
+    margin-top: 1rem;
+    padding-left: 1rem;
+    border-left: 2px solid $secondary-color;
+  }
+
+  &__error {
+    color: $danger-color;
+    text-align: center;
+    margin-top: 2rem;
+  }
+}

@@ -44,8 +44,13 @@ const Login = ({ onLogin }) => {
       setSuccess('Login successful!');
       setTimeout(() => {
         onLogin();
-        navigate(user.role === 'admin' ? '/admin-dashboard' : '/home');
-      }, 1000);
+        if (user.role === 'admin') {
+          navigate('/createUniversity');
+        } else if (user.role === 'university') {
+          navigate('/universityProfile');
+        } else {
+          navigate('/home');
+        }      }, 1000);
     } catch (err) {
       setError(err.response?.data?.error || 'Login failed');
     } finally {

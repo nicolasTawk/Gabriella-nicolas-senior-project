@@ -9,6 +9,9 @@ const universityRoutes = require("./routes/university_routes");
 const userRoutes = require("./routes/user_routes");
 const adminRoutes = require("./routes/admin_routes");
 const publicRoutes = require("./routes/public_routes");
+const favoriteRoutes = require("./routes/favorite_routes");
+const review_routes = require("./routes/review_routes");
+const comment_routes = require("./routes/comment_routes");
 
 
 const app = express();
@@ -23,8 +26,13 @@ app.use("/api/users", userRoutes);
 
 // Admin endpoints
 app.use("/api/admin", adminRoutes);
+app.use("/api/favoring", favoriteRoutes);
 
 app.use("/api/public", publicRoutes);
+
+app.use("/api/review", review_routes);
+app.use("/api/comment", comment_routes);
+
 
 
 app.use("/api/university", universityRoutes);

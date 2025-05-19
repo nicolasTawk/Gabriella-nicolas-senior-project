@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import api from '../../http-common';
 import Loader from '../../common/Loader/Loader';
@@ -18,15 +19,11 @@ const UniversityProfile = () => {
   const [logoUrl, setLogoUrl] = useState(defaultLogo);
   const [logoFile, setLogoFile] = useState(null);
 
+  // Fetch logo as blob via axios, convert to URL
   const fetchLogo = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const res = await fetch('http://localhost:3000/api/university/profile/logo', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      if (!res.ok) throw new Error('Logo fetch failed');
-      const blob = await res.blob();
-      setLogoUrl(URL.createObjectURL(blob));
+      const res = await api.get('/university/logo', { responseType: 'blob' });
+      setLogoUrl(URL.createObjectURL(res.data));
     } catch {
       setLogoUrl(defaultLogo);
     }
@@ -76,23 +73,19 @@ const UniversityProfile = () => {
 
   const handleSave = async () => {
     try {
-      const token = localStorage.getItem('token');
       const formPayload = new FormData();
-      Object.entries(formData).forEach(([key, value]) => {
-        formPayload.append(key, value);
-      });
+      Object.entries(formData).forEach(([key, value]) => formPayload.append(key, value));
       if (logoFile) formPayload.append('image', logoFile);
 
       const endpoint = profileExists ? 'Update-profile' : 'Add-profile';
-      const method = profileExists ? 'PUT' : 'POST';
+      const method = profileExists ? 'put' : 'post';
 
-      const res = await fetch(`http://localhost:3000/api/university/${endpoint}`, {
+      // IMPORTANT: DO NOT set Content-Type manually! Let axios set it with boundary
+      await api({
         method,
-        headers: { Authorization: `Bearer ${token}` },
-        body: formPayload
+        url: `/university/${endpoint}`,
+        data: formPayload,
       });
-
-      if (!res.ok) throw new Error('Save failed');
 
       setMessage(profileExists ? '✅ Profile updated successfully!' : '✅ Profile created successfully!');
       setProfileExists(true);
@@ -132,8 +125,8 @@ const UniversityProfile = () => {
           <input type="file" accept="image/*" onChange={handleLogoChange} className="mt-2" />
         </div>
 
-        <div className="col-md-8 " >
-          {[ 
+        <div className="col-md-8 p-0">
+          {[
             { label: 'About', field: 'about', isTextarea: true },
             { label: 'Name', field: 'name' },
             { label: 'Website', field: 'website' },
@@ -173,12 +166,15 @@ const UniversityProfile = () => {
               {profileExists ? 'Save Changes' : 'Create Profile'}
             </button>
           </div>
+          </div>
 
           {profileExists && (
             <>
+            <div className="row justify-content-center align-items-center p-0">
+
               <div className="col-12 col-md-6 mb-3">
                 <button className="profile__btn profile__btn--delete" onClick={handleDelete}>
-                  Delete Account
+                  Delete Profile
                 </button>
               </div>
               <div className="col-12 col-md-6 mb-3">
@@ -186,10 +182,10 @@ const UniversityProfile = () => {
                   Change Password
                 </button>
               </div>
+              </div>
             </>
           )}
         </div>
-      </div>
 
       {modalPasswordOpen && <ChangePasswordModal onClose={() => setModalPasswordOpen(false)} />}
     </div>

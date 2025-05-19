@@ -35,9 +35,9 @@ html, body {
 
 .main-content {
   flex-grow: 1;
-  padding: 1.5rem;
+  padding: 1rem;
   transition: margin-left 0.3s ease;
-  overflow-x: hidden;
+  overflow-x: hidden !important;
   background-color: $background-color;
 }
 

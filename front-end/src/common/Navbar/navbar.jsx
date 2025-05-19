@@ -2,9 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   FaHome, FaUser, FaCog, FaSignOutAlt, FaBars,
-  FaUniversity, FaClipboardList, FaUsers, FaBuilding
+  FaUniversity, FaClipboardList, FaUsers, FaBuilding,
+  FaKey, FaSchool,
+  FaUserPlus,
+  FaTrash
 } from 'react-icons/fa';
 import './navbar.scss';
+import title from '../../util/images/title.png'
+import api from '../../http-common'
 
 const Navbar = ({ onToggle }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -26,6 +31,21 @@ const Navbar = ({ onToggle }) => {
     navigate('/login');
   };
 
+  const handleDeleteAccount = async () => {
+    if (!window.confirm('Are you sure you want to delete your account? This cannot be undone.')) {
+      return;
+    }
+    try {
+      await api.delete('/users/me/delete');
+      // clear storage & redirect
+      localStorage.clear();
+      navigate('/login');
+    } catch (err) {
+      console.error('Failed to delete account:', err);
+      alert('Could not delete account. Please try again.');
+    }
+  };
+
   const renderMainLinks = () => {
     switch (userRole) {
       case 'student':
@@ -44,6 +64,11 @@ const Navbar = ({ onToggle }) => {
             <li className={location.pathname === '/universities' ? 'nav-sidebar__item nav-sidebar__item--active' : 'nav-sidebar__item'}>
               <Link to="/universities">
                 <FaUniversity className="nav-sidebar__icon" /> {isOpen && 'Universities'}
+              </Link>
+            </li>
+            <li className={location.pathname === '/majorsList' ? 'nav-sidebar__item nav-sidebar__item--active' : 'nav-sidebar__item'}>
+              <Link to="/majorsList">
+              <FaSchool className="nav-sidebar__icon" /> {isOpen && 'Majors'}
               </Link>
             </li>
           </>
@@ -73,7 +98,12 @@ const Navbar = ({ onToggle }) => {
           <>
             <li className={location.pathname === '/createUniversity' ? 'nav-sidebar__item nav-sidebar__item--active' : 'nav-sidebar__item'}>
               <Link to="/createUniversity">
-                <FaHome className="nav-sidebar__icon" /> {isOpen && 'Dashboard'}
+                <FaUniversity className="nav-sidebar__icon" /> {isOpen && 'Dashboard'}
+              </Link>
+            </li>
+            <li className={location.pathname === '/createAdmin' ? 'nav-sidebar__item nav-sidebar__item--active' : 'nav-sidebar__item'}>
+              <Link to="/createAdmin">
+                <FaUserPlus className="nav-sidebar__icon" /> {isOpen && 'Dashboard'}
               </Link>
             </li>
             <li className={location.pathname === '/listUniversities' ? 'nav-sidebar__item nav-sidebar__item--active' : 'nav-sidebar__item'}>
@@ -81,14 +111,9 @@ const Navbar = ({ onToggle }) => {
                 <FaUniversity className="nav-sidebar__icon" /> {isOpen && 'Universities'}
               </Link>
             </li>
-            <li className={location.pathname === '/admin/students' ? 'nav-sidebar__item nav-sidebar__item--active' : 'nav-sidebar__item'}>
-              <Link to="/admin/students">
+            <li className={location.pathname === '/listStudents' ? 'nav-sidebar__item nav-sidebar__item--active' : 'nav-sidebar__item'}>
+              <Link to="/ListStudents">
                 <FaUsers className="nav-sidebar__icon" /> {isOpen && 'Students'}
-              </Link>
-            </li>
-            <li className={location.pathname === '/admin/schemas' ? 'nav-sidebar__item nav-sidebar__item--active' : 'nav-sidebar__item'}>
-              <Link to="/admin/schemas">
-                <FaClipboardList className="nav-sidebar__icon" /> {isOpen && 'Schemas'}
               </Link>
             </li>
           </>
@@ -104,7 +129,7 @@ const Navbar = ({ onToggle }) => {
         <div className="nav-sidebar__toggle" onClick={() => setIsOpen(!isOpen)}>
           <FaBars />
         </div>
-        {isOpen && <p>AI Guidance Council</p>}
+        {isOpen && <img src={title} alt="Logo" className="nav-sidebar__logo" /> }
       </div>
 
       <ul className="nav-sidebar__section nav-sidebar__section--main">
@@ -112,13 +137,28 @@ const Navbar = ({ onToggle }) => {
       </ul>
 
       <ul className="nav-sidebar__section nav-sidebar__section--bottom">
-  {(userRole === 'admin' || userRole === 'student') && (
+  {(userRole === 'student') && (
     <li className={location.pathname === '/profile' ? 'nav-sidebar__item nav-sidebar__item--active' : 'nav-sidebar__item'}>
       <Link to="/profile">
         <FaUser className="nav-sidebar__icon" /> {isOpen && 'Profile'}
       </Link>
     </li>
   )}
+  {(userRole === 'admin') && (
+    <li className={location.pathname === '/changeAdminPassword' ? 'nav-sidebar__item nav-sidebar__item--active' : 'nav-sidebar__item'}>
+      <Link to="/changeAdminPassword">
+        <FaKey className="nav-sidebar__icon" /> {isOpen && 'Profile'}
+      </Link>
+    </li>
+  )}
+  {userRole === 'university' && ( 
+    <li className="nav-sidebar__item" onClick={handleDeleteAccount}>
+      <span>
+        <FaTrash className="nav-sidebar__icon" /> {isOpen && 'Delete Account'}
+      </span>
+    </li>
+  )}
+
         {/* <li className={location.pathname === '/settings' ? 'nav-sidebar__item nav-sidebar__item--active' : 'nav-sidebar__item'}>
           <Link to="/settings">
             <FaCog className="nav-sidebar__icon" /> {isOpen && 'Settings'}

@@ -1,3 +1,4 @@
+/* src/university/Majors/Majors.scss */
 @import '../../styles/variables';
 @import '../../styles/mixins';
 
@@ -12,11 +13,9 @@
   &__add-btn {
     margin-top: 0 !important;
     width: 40%;
-
     @include respond(tablet) {
       width: auto;
     }
-
     @include respond(phone) {
       width: 100%;
     }
@@ -67,13 +66,12 @@
     display: flex;
     gap: 0.75rem;
 
-    .faculty__icon {
+    .major__icon {
       cursor: pointer;
       transition: color 0.2s ease;
 
       &.edit {
         color: $primary-color !important;
-
         &:hover {
           color: darken($primary-color, 10%);
         }
@@ -81,7 +79,6 @@
 
       &.delete {
         color: $danger-color !important;
-
         &:hover {
           color: darken($danger-color, 10%);
         }

@@ -1,0 +1,232 @@
+// @import '../../styles/variables';
+// @import '../../styles/mixins';
+
+// .major-list {
+//   &__back-btn {
+//     position: sticky;
+//     top: 0;
+//     background: $background-color;
+//     z-index: 10;
+//     padding-bottom: 0.5rem;
+//     display: flex;
+//     align-items: center;
+//     gap: 0.5rem;
+//     font-size: $text-large;
+//     color: $primary-color;
+//     cursor: pointer;
+//     border: 0;
+//     @include respond(tablet){
+//       font-size: $text-medium;
+//     }
+   
+//   }
+
+//   &__title {
+//     color: $primary-color;
+//     font-size: $title-large;
+//     @include respond(tablet) { font-size: $title-medium; }
+//     @include respond(phone)  { font-size: $title-small; }
+//   }
+
+//   &__select {
+//     width: 100%;
+//     @include input-style;
+//   }
+
+//   &__search-wrapper {
+//     display: flex;
+//     width: 100%;
+//     align-items: center;
+
+//     .search-bar {           // assuming your SearchBar renders this class
+//       width: 50%;
+//     }
+
+//     & > .major-list__filter-icon {
+//       font-size: 1.25rem;
+//       margin-left: 0.5rem;
+//       color: $primary-color;
+//       cursor: pointer;
+
+//       &:hover {
+//         color: darken($primary-color, 10%);
+//       }
+//     }
+//   }
+
+//   &__table-wrapper {
+//     overflow-x: auto;
+//     border-radius: $border-radius;
+//     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+//   }
+
+//   &__table {
+//     width: 100%;
+//     border-collapse: collapse;
+
+//     thead {
+//       position: sticky;
+//       top: 0;
+//       background: $primary-color;
+//       color: white;
+//     }
+
+//     th, td {
+//       padding: 0.75rem;
+//       text-align: left;
+//       @include respond(phone) {
+//         padding: 0.5rem;
+//       }
+//     }
+
+//     tbody tr:nth-child(odd)  { background: white; }
+//     tbody tr:nth-child(even) { background: $secondary-color; }
+//     tbody tr:hover           { background: lighten($primary-color, 46%); }
+//   }
+
+//   &__star {
+//     font-size: 1.2rem;
+//     color: $border-color;
+//     cursor: pointer;
+//     &--filled {
+//       color: $primary-color;
+//     }
+//   }
+
+//   &__empty {
+//     text-align: center;
+//     padding: 1rem;
+//     color: $danger-color;
+//     font-style: italic;
+//   }
+
+//   &__error {
+//     color: $danger-color;
+//     text-align: center;
+//     margin-top: 1rem;
+//   }
+// }
+
+
+
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.major-list {
+  &__back-btn {
+    background: transparent;
+    border: none;
+    font-size: $text-large;
+    color: $primary-color;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    @include respond(tablet) { font-size: $text-medium; }
+  }
+
+  &__title {
+    color: $primary-color;
+    font-size: $title-large;
+    @include respond(tablet) { font-size: $title-medium; }
+    @include respond(phone)  { font-size: $title-small; }
+  }
+
+  &__select {
+    width: 100%;
+    @include input-style;
+  }
+
+  &__search-wrapper {
+    flex: 1;
+    .search-bar {
+      width: 100%;
+    }
+  }
+
+  &__filter {
+    position: relative;
+    margin-left: 0.5rem;
+  }
+
+  &__filter-btn {
+    background: transparent;
+    border: none;
+    padding: 0.25rem;
+    font-size: 1.25rem;
+    color: $primary-color;
+    cursor: pointer;
+    transition: background 0.2s;
+    
+    &:hover { background: rgba(0,0,0,0.05); }
+    
+    &--active { background: rgba(0,0,0,0.1); }
+  }
+
+  &__filter-menu {
+    position: absolute;
+    right: 0;
+    top: 110%;
+    background: $background-color;
+    border-radius: $border-radius;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    list-style: none;
+    margin: 0;
+    padding: 0.5rem 0;
+    z-index: 10;
+    width: 160px;
+  }
+
+  &__filter-item {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    &:hover { background: $secondary-color; }
+  }
+
+  &__table-wrapper {
+    overflow-x: auto;
+    border-radius: $border-radius;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+    thead {
+      position: sticky;
+      top: 0;
+      background: $primary-color;
+      color: white;
+    }
+    th, td {
+      padding: 0.75rem;
+      text-align: left;
+      @include respond(phone) { padding: 0.5rem; }
+    }
+    tbody tr:nth-child(odd)  { background: white; }
+    tbody tr:nth-child(even) { background: $secondary-color; }
+    tbody tr:hover           { background: lighten($primary-color, 46%); }
+  }
+
+  &__star {
+    font-size: 1.2rem;
+    color: $border-color;
+    cursor: pointer;
+    &--filled {
+      color: $primary-color;
+    }
+  }
+
+  &__empty {
+    text-align: center;
+    padding: 1rem;
+    color: $danger-color;
+    font-style: italic;
+  }
+
+  &__error {
+    color: $danger-color;
+    text-align: center;
+    margin-top: 1rem;
+  }
+}

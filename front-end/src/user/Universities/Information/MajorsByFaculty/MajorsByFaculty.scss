@@ -1,0 +1,49 @@
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins';
+
+.majors-by-faculty {
+  padding: 1rem;
+
+  &__header {
+    border-bottom: 1px solid $border-color;
+  }
+
+  &__back-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: $primary-color;
+
+    &:hover {
+      color: darken($primary-color, 10%);
+    }
+  }
+
+  &__title {
+    color: $primary-color;
+    font-weight: 700;
+    font-size: $title-large;
+
+    @include respond(tablet) {
+      font-size: $title-medium;
+    }
+
+    @include respond(phone) {
+      font-size: $title-small;
+    }
+  }
+
+  &__error {
+    color: $danger-color;
+    font-weight: bold;
+    margin: 1rem 0;
+  }
+
+  &__table-wrapper {
+    max-height: 65vh;
+    overflow-y: auto;
+    border-radius: $border-radius;
+    box-shadow: 0 0 8px rgba(0,0,0,0.3);
+  }
+}
