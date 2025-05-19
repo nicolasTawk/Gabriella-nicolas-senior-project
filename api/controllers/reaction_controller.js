@@ -23,4 +23,27 @@ async function react(req, res) {
   }
 }
 
-module.exports = { react };
+/**
+ * GET /api/v1/comments/:id/reactions/count
+ * Returns the total likes and dislikes for comment :id
+ */
+async function getReactionCounts(req, res) {
+  const comId = +req.params.id;
+  try {
+    const likes = await Reaction.count({
+      where: { comment_id: comId, type: "like" }
+    });
+    const dislikes = await Reaction.count({
+      where: { comment_id: comId, type: "dislike" }
+    });
+    res.json({ comment_id: comId, likes, dislikes });
+  } catch (err) {
+    console.error("getReactionCounts error:", err);
+    res.status(500).json({ error: err.message });
+  }
+}
+
+module.exports = {
+  react,
+  getReactionCounts
+};

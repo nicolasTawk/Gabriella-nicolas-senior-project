@@ -3,7 +3,7 @@ const router = require("express").Router();
 const { body, param } = require("express-validator");
 const { requireStudent, requireAuth } = require("../middleware/auth_middleware");  
 const { postComment, listComments } = require("../controllers/comment_controller");
-const { react } = require("../controllers/reaction_controller");
+const { react, getReactionCounts } = require("../controllers/reaction_controller");
 
 /**
  * POST /api/v1/reviews/:id/comments
@@ -48,5 +48,11 @@ router.post(
   ],
   react
 );
+
+router.get(
+    "/comments/:id/reactions/count",
+    requireStudent,
+    getReactionCounts
+  );
 
 module.exports = router;
