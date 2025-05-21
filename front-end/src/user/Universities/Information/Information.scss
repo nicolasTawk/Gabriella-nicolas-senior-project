@@ -87,6 +87,9 @@
     box-shadow: 0 0 8px rgba(0,0,0,0.3);
   }
 
+  &__section-title {
+    color: $primary-color;
+  }
   // Reviews & Rating Section
   &__rating-section {
     max-width: 600px;
@@ -147,21 +150,22 @@
 }
 
 .review-box {
-  background-color: $secondary-color;
+  background-color: #f5f5f5;
   border-radius:   $border-radius;
   box-shadow:      0 4px 12px rgba(0, 0, 0, 0.1);
   padding:         1rem;
   margin-bottom: 1rem;
+  color: $primary-color;
 
   &__title {
     font-size: $text-large;
-    color: $primary-color;
+    color: $primary-color !important;
     text-align: center;
     margin-bottom: 0.75rem;
   }
 
   &__existing {
-    background: $secondary-color;
+    // background: $secondary-color;
     padding: 1rem;
     border-radius: $border-radius;
     text-align: center;
@@ -186,6 +190,7 @@
     @include input-style;
     resize: vertical;
     margin: 1rem 0;
+    color: $primary-color;
   }
 
   &__stars-input {
@@ -197,7 +202,7 @@
 
   &__star {
     font-size: 1.5rem;
-    color: $border-color;
+    color: $primary-color;
     cursor: pointer;
     transition: color 0.2s;
 

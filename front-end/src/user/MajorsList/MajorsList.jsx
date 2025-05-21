@@ -151,7 +151,7 @@ export default function MajorsList() {
               <th>Faculty</th>
               <th>Credits</th>
               <th>Tuition</th>
-              <th className="text-center">Fav</th>
+              {/* <th className="text-center">Fav</th> */}
             </tr>
           </thead>
           <tbody>
@@ -162,7 +162,7 @@ export default function MajorsList() {
                   <td>{m.facultyName}</td>
                   <td>{m.number_of_credits}</td>
                   <td>${m.tuition_fee}</td>
-                  <td className="text-center">
+                  {/* <td className="text-center">
                     {favorites.has(m.major) ? (
                       <FaStar
                         className="major-list__star major-list__star--filled"
@@ -174,7 +174,7 @@ export default function MajorsList() {
                         onClick={() => toggleFav(m.major)}
                       />
                     )}
-                  </td>
+                  </td> */}
                 </tr>
               ))
             ) : (

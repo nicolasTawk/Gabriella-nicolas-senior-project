@@ -17,8 +17,9 @@ const AddMajor = ({ major, faculties, onClose, onAdd }) => {
 
   useEffect(() => {
     if (isEdit) {
+
       setFormData({
-        facultyId: major.facultyId,
+        facultyId: major.faculty_id,
         name: major.name,
         code: major.code,
         number_of_credits: major.number_of_credits,
@@ -27,7 +28,6 @@ const AddMajor = ({ major, faculties, onClose, onAdd }) => {
       });
     }
   }, [major, isEdit]);
-
   const handleChange = e => {
     const { name, value } = e.target;
     setFormData(fd => ({ ...fd, [name]: value }));
@@ -151,12 +151,12 @@ const AddMajor = ({ major, faculties, onClose, onAdd }) => {
           {error && <p className="add-major__error">{error}</p>}
 
           <div className="add-major__buttons">
-            <button type="submit" disabled={loading}>
+            <button type="submit" className="primary-btn submit" disabled={loading}>
               {loading ? (isEdit ? 'Updating…' : 'Adding…') : (isEdit ? 'Update' : 'Add')}
             </button>
             <button
               type="button"
-              className="cancel"
+              className="cancel primary-btn"
               onClick={onClose}
               disabled={loading}
             >

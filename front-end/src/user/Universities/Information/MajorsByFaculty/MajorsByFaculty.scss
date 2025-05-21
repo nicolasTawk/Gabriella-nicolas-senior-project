@@ -9,15 +9,15 @@
   }
 
   &__back-btn {
-    background: none;
+    background: transparent;
     border: none;
-    cursor: pointer;
-    font-size: 1.5rem;
+    font-size: $text-large;
     color: $primary-color;
-
-    &:hover {
-      color: darken($primary-color, 10%);
-    }
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    @include respond(tablet) { font-size: $text-medium; }
   }
 
   &__title {

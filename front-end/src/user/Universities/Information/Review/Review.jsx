@@ -1,15 +1,310 @@
+
+
+// import React, { useState, useEffect, useRef } from 'react';
+// import { useParams, useNavigate } from 'react-router-dom';
+// import {
+//   FaArrowLeft,
+//   FaFilter,
+//   FaThumbsUp,
+//   FaThumbsDown,
+//   FaReply,
+//   FaStar,
+//   FaRegStar
+// } from 'react-icons/fa';
+// import api from '../../../../http-common';
+// import Loader from '../../../../common/Loader/Loader';
+// import './Review.scss';
+
+// const SORT_OPTIONS = [
+//   { value: 'stars_desc', label: 'Rating: High → Low' },
+//   { value: 'stars_asc', label: 'Rating: Low → High' },
+// ];
+
+// export default function Review() {
+//   const { id } = useParams();
+//   const navigate = useNavigate();
+//   const [reviews, setReviews] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState('');
+//   const [sortBy, setSortBy] = useState('stars_desc');
+//   const [filterOpen, setFilterOpen] = useState(false);
+//   const filterRef = useRef();
+
+//   const [threadsOpen, setThreadsOpen] = useState({});
+//   const [commentsByReview, setCommentsByReview] = useState({});
+//   const [replyText, setReplyText] = useState({});
+//   const [showReplyBox, setShowReplyBox] = useState({});
+//   const [reactionCounts, setReactionCounts] = useState({});
+//   const [userReactions, setUserReactions] = useState({});
+
+//   // Close filter dropdown on outside click
+//   useEffect(() => {
+//     const onClick = e => {
+//       if (filterRef.current && !filterRef.current.contains(e.target)) {
+//         setFilterOpen(false);
+//       }
+//     };
+//     document.addEventListener('mousedown', onClick);
+//     return () => document.removeEventListener('mousedown', onClick);
+//   }, []);
+
+//   // Fetch reviews
+//   useEffect(() => {
+//     api.get(`/review/universities/${id}`)
+//       .then(res => setReviews(res.data.reviews || []))
+//       .catch(() => setError('Could not load reviews.'))
+//       .finally(() => setLoading(false));
+//   }, [id]);
+
+//   // Fetch reaction counts for top-level reviews
+//   useEffect(() => {
+//     reviews.forEach(r => fetchReactionCount(r.id));
+//   }, [reviews]);
+
+//   const sorted = [...reviews].sort((a, b) =>
+//     sortBy === 'stars_asc' ? a.stars - b.stars : b.stars - a.stars
+//   );
+
+//   const fetchReactionCount = async commentId => {
+//     try {
+//       const res = await api.get(`/comment/comments/${commentId}/reactions/count`);
+//       setReactionCounts(prev => ({
+//         ...prev,
+//         [commentId]: { likes: res.data.likes, dislikes: res.data.dislikes }
+//       }));
+//     } catch {}
+//   };
+
+//   const toggleThread = async reviewId => {
+//     if (threadsOpen[reviewId]) {
+//       setThreadsOpen(prev => ({ ...prev, [reviewId]: false }));
+//     } else {
+//       try {
+//         const res = await api.get(`/comment/reviews/${reviewId}/comments`);
+//         setCommentsByReview(prev => ({ ...prev, [reviewId]: res.data.comments }));
+//         setThreadsOpen(prev => ({ ...prev, [reviewId]: true }));
+//         res.data.comments.forEach(c => fetchReactionCount(c.id));
+//       } catch {
+//         alert('Failed to load comments.');
+//       }
+//     }
+//   };
+
+//   const submitReply = async (reviewId, parentId = null) => {
+//     const key = parentId || reviewId;
+//     const text = (replyText[key] || '').trim();
+//     if (!text) return;
+//     try {
+//       await api.post(
+//         `/comment/reviews/${reviewId}/comments`,
+//         { content: text, parent_id: parentId }
+//       );
+//       const res = await api.get(`/comment/reviews/${reviewId}/comments`);
+//       setCommentsByReview(prev => ({ ...prev, [reviewId]: res.data.comments }));
+//       res.data.comments.forEach(c => fetchReactionCount(c.id));
+//       setReplyText(prev => ({ ...prev, [key]: '' }));
+//       setShowReplyBox(prev => ({ ...prev, [key]: false }));
+//     } catch {
+//       alert('Failed to post reply.');
+//     }
+//   };
+
+//   const toggleReaction = async (commentId, type) => {
+//     try {
+//       await api.post(`/comment/comments/${commentId}/reactions`, { type });
+//       setUserReactions(prev => ({
+//         ...prev,
+//         [commentId]: prev[commentId] === type ? null : type
+//       }));
+//       fetchReactionCount(commentId);
+//     } catch {
+//       alert('Could not update reaction.');
+//     }
+//   };
+
+//   const buildTree = flat => {
+//     const map = {};
+//     flat.forEach(c => map[c.id] = { ...c, children: [] });
+//     const roots = [];
+//     flat.forEach(c => {
+//       if (c.parent_id) map[c.parent_id]?.children.push(map[c.id]);
+//       else roots.push(map[c.id]);
+//     });
+//     return roots;
+//   };
+
+//   const CommentNode = ({ node, reviewId, depth = 0 }) => (
+//     <div className="rev__comment-node" style={{ marginLeft: depth * 20 }}>
+//       <div className="rev__comment-header">
+//         <strong className="rev__comment-user">{node.User.username}</strong>
+//       </div>
+//       <p className="rev__comment-text">{node.content}</p>
+//       <div className="rev__comment-actions">
+//         <FaReply
+//           className="rev__icon rev__icon--action"
+//           onClick={() => setShowReplyBox(prev => ({ ...prev, [node.id]: !prev[node.id] }))}
+//         />
+//         <div className="rev__reaction-group">
+//           <button
+//             className={`rev__icon rev__icon--action ${userReactions[node.id] === 'like' ? 'rev__icon--selected' : ''}`}
+//             onClick={() => toggleReaction(node.id, 'like')}
+//           >
+//             <FaThumbsUp/><span>{reactionCounts[node.id]?.likes || 0}</span>
+//           </button>
+//           <button
+//             className={`rev__icon rev__icon--action ${userReactions[node.id] === 'dislike' ? 'rev__icon--selected' : ''}`}
+//             onClick={() => toggleReaction(node.id, 'dislike')}
+//           >
+//             <FaThumbsDown/><span>{reactionCounts[node.id]?.dislikes || 0}</span>
+//           </button>
+//         </div>
+//       </div>
+//       {showReplyBox[node.id] && (
+//         <div className="rev__reply-box">
+//           <textarea
+//             className="rev__reply-input"
+//             rows="2"
+//             placeholder="Your reply…"
+//             value={replyText[node.id] || ''}
+//             onChange={e => setReplyText(prev => ({ ...prev, [node.id]: e.target.value }))}
+//           />
+//           <button
+//             className="primary-btn rev__reply-submit"
+//             disabled={!replyText[node.id]?.trim()}
+//             onClick={() => submitReply(reviewId, node.id)}
+//           >
+//             Post
+//           </button>
+//         </div>
+//       )}
+//       {node.children.map(child => (
+//         <CommentNode key={child.id} node={child} reviewId={reviewId} depth={depth+1} />
+//       ))}
+//     </div>
+//   );
+
+//   if (loading) return <Loader />;
+//   if (error) return <p className="rev__error">{error}</p>;
+
+//   return (
+//     <div className="rev container py-4">
+//       <div className="rev__header row align-items-center mb-4">
+//         <div className="col-2">
+//           <button className="rev__back link-button" onClick={() => navigate(-1)}>
+//             <FaArrowLeft/> Back
+//           </button>
+//         </div>
+//         <div className="col-8 text-center">
+//           <h2 className="rev__title">
+//             {reviews[0]?.UniversityProfile?.name || 'University'} Reviews
+//           </h2>
+//         </div>
+//         <div className="col-2 text-end" ref={filterRef}>
+//           <FaFilter className="rev__filter-icon" onClick={() => setFilterOpen(o => !o)} />
+//           {filterOpen && (
+//             <ul className="rev__filter-menu">
+//               {SORT_OPTIONS.map(o => (
+//                 <li key={o.value} className="rev__filter-item" onClick={() => {
+//                   setSortBy(o.value);
+//                   setFilterOpen(false);
+//                 }}>
+//                   {o.label}
+//                 </li>
+//               ))}
+//             </ul>
+//           )}
+//         </div>
+//       </div>
+//       {sorted.map(review => (
+//         <div key={review.id} className="rev__card mb-4">
+//           <div className="rev__top">
+//             <strong className="rev__user">{review.User.username}</strong>
+//             <div className="rev__stars">
+//               {Array.from({ length: 5 }, (_, i) =>
+//                 i < review.stars
+//                   ? <FaStar key={i} className="rev__star rev__star--filled"/>
+//                 : <FaRegStar key={i} className="rev__star"/>
+//               )}
+//             </div>
+//           </div>
+//           <p className="rev__comment">{review.comment || '—'}</p>
+//           <div className="rev__comment-actions">
+//             <FaReply
+//               className="rev__icon rev__icon--action"
+//               onClick={() => setShowReplyBox(prev => ({ ...prev, [review.id]: !prev[review.id] }))}
+//             />
+//             <div className="rev__reaction-group">
+//               <button
+//                 className={`rev__icon rev__icon--action ${userReactions[review.id] === 'like' ? 'rev__icon--selected' : ''}`}
+//                 onClick={() => toggleReaction(review.id, 'like')}
+//               >
+//                 <FaThumbsUp/><span>{reactionCounts[review.id]?.likes || 0}</span>
+//               </button>
+//               <button
+//                 className={`rev__icon rev__icon--action ${userReactions[review.id] === 'dislike' ? 'rev__icon--selected' : ''}`}
+//                 onClick={() => toggleReaction(review.id, 'dislike')}
+//               >
+//                 <FaThumbsDown/><span>{reactionCounts[review.id]?.dislikes || 0}</span>
+//               </button>
+//             </div>
+//           </div>
+//           {showReplyBox[review.id] && (
+//             <div className="rev__reply-box">
+//               <textarea
+//                 className="rev__reply-input"
+//                 rows="2"
+//                 placeholder="Your reply…"
+//                 value={replyText[review.id] || ''}
+//                 onChange={e => setReplyText(prev => ({ ...prev, [review.id]: e.target.value }))}
+//               />
+//               <button
+//                 className="primary-btn rev__reply-submit mb-3"
+//                 disabled={!replyText[review.id]?.trim()}
+//                 onClick={() => submitReply(review.id, null)}
+//               >
+//                 Post
+//               </button>
+//             </div>
+//           )}
+//           <div className="rev__actions row align-items-center">
+//             <div className="col-auto">
+//               <button
+//                 className="rev__btn primary-btn"
+//                 onClick={() => toggleThread(review.id)}
+//               >
+//                 {threadsOpen[review.id] ? 'Hide Comments' : 'Show All Comments'}
+//               </button>
+//             </div>
+//           </div>
+//           {threadsOpen[review.id] && (
+//             <div className="rev__thread mt-3">
+//               {buildTree(commentsByReview[review.id] || []).map(node => (
+//                 <CommentNode key={node.id} node={node} reviewId={review.id} />
+//               ))}
+//             </div>
+//           )}
+//         </div>
+//       ))}
+//     </div>
+//   );
+// }
+
+
+
+
+
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
-  FaFilter,
   FaArrowLeft,
+  FaFilter,
   FaReply,
   FaStar,
   FaRegStar,
-  FaThumbsUp,
   FaRegThumbsUp,
-  FaThumbsDown,
-  FaRegThumbsDown
+  FaThumbsUp,
+  FaRegThumbsDown,
+  FaThumbsDown
 } from 'react-icons/fa';
 import api from '../../../../http-common';
 import Loader from '../../../../common/Loader/Loader';
@@ -18,28 +313,26 @@ import './Review.scss';
 const SORT_OPTIONS = [
   { value: 'stars_desc', label: 'Rating: High → Low' },
   { value: 'stars_asc',  label: 'Rating: Low → High'  },
-  { value: 'likes_desc', label: 'Most Liked' },
-  { value: 'likes_asc',  label: 'Least Liked' }
 ];
 
-export default function UniversityReviews() {
+export default function Review() {
   const { id } = useParams();
-  const nav   = useNavigate();
+  const navigate = useNavigate();
+  const [reviews, setReviews]               = useState([]);
+  const [loading, setLoading]               = useState(true);
+  const [error, setError]                   = useState('');
+  const [sortBy, setSortBy]                 = useState('stars_desc');
+  const [filterOpen, setFilterOpen]         = useState(false);
+  const filterRef                          = useRef();
 
-  const [reviews, setReviews]                 = useState([]);
-  const [commentCounts, setCommentCounts]     = useState({});
+  const [threadsOpen, setThreadsOpen]       = useState({});
   const [commentsByReview, setCommentsByReview] = useState({});
-  const [threadsOpen, setThreadsOpen]         = useState({});
-  const [replyingTo, setReplyingTo]           = useState(null);
-  const [replyText, setReplyText]             = useState({});
-  const [reactions, setReactions]             = useState({});
-  const [sortBy, setSortBy]                   = useState('stars_desc');
-  const [filterOpen, setFilterOpen]           = useState(false);
-  const [loading, setLoading]                 = useState(true);
-  const [error, setError]                     = useState('');
-  const filterRef = useRef();
+  const [replyText, setReplyText]           = useState({});
+  const [showReplyBox, setShowReplyBox]     = useState({});
+  const [reactionCounts, setReactionCounts] = useState({});
+  const [userReactions, setUserReactions]   = useState({});
 
-  // close filter menu on outside click
+  // close filter dropdown when clicking outside
   useEffect(() => {
     const onClick = e => {
       if (filterRef.current && !filterRef.current.contains(e.target)) {
@@ -50,94 +343,81 @@ export default function UniversityReviews() {
     return () => document.removeEventListener('mousedown', onClick);
   }, []);
 
-  // 1) fetch reviews + count their comments
+  // fetch reviews
   useEffect(() => {
-    setLoading(true);
     api.get(`/review/universities/${id}`)
-      .then(async res => {
-        console.log('REVIEWS PAYLOAD:', res.data.reviews);
-      setReviews(res.data.reviews || []);
-        const rv = res.data.reviews || [];
-        setReviews(rv);
-
-        // count comments for each review
-        const counts = {};
-        await Promise.all(rv.map(r =>
-          api.get(`/comment/reviews/${r.id}/comments`)
-            .then(r2 => { counts[r.id] = r2.data.comments.length; })
-            .catch(() => { counts[r.id] = 0; })
-        ));
-        setCommentCounts(counts);
-      })
+      .then(res => setReviews(res.data.reviews || []))
       .catch(() => setError('Could not load reviews.'))
       .finally(() => setLoading(false));
   }, [id]);
 
-  // sorting reviews
-  const sorted = [...reviews].sort((a, b) => {
-    switch (sortBy) {
-      case 'stars_asc':
-        return a.stars - b.stars;
-      case 'likes_asc':
-        return (reactions[a.id] === 'like' ? 1 : 0)
-             - (reactions[b.id] === 'like' ? 1 : 0);
-      case 'likes_desc':
-        return (reactions[b.id] === 'like' ? 1 : 0)
-             - (reactions[a.id] === 'like' ? 1 : 0);
-      case 'stars_desc':
-      default:
-        return b.stars - a.stars;
-    }
-  });
+  // fetch reaction counts on reviews load
+  useEffect(() => {
+    reviews.forEach(r => fetchReactionCount(r.id));
+  }, [reviews]);
 
-  // toggle loading / hiding the nested thread
+  const sorted = [...reviews].sort((a,b) =>
+    sortBy === 'stars_asc' ? a.stars - b.stars : b.stars - a.stars
+  );
+
+  async function fetchReactionCount(commentId) {
+    try {
+      const res = await api.get(`/comment/comments/${commentId}/reactions/count`);
+      setReactionCounts(prev => ({
+        ...prev,
+        [commentId]: {
+          likes: res.data.likes,
+          dislikes: res.data.dislikes
+        }
+      }));
+    } catch {}
+  }
+
+  // toggle nested comments
   const toggleThread = async reviewId => {
     if (threadsOpen[reviewId]) {
-      setThreadsOpen({ ...threadsOpen, [reviewId]: false });
+      setThreadsOpen(prev => ({ ...prev, [reviewId]: false }));
     } else {
       try {
         const res = await api.get(`/comment/reviews/${reviewId}/comments`);
-        setCommentsByReview({
-          ...commentsByReview,
-          [reviewId]: res.data.comments
-        });
-        setThreadsOpen({ ...threadsOpen, [reviewId]: true });
+        setCommentsByReview(prev => ({ ...prev, [reviewId]: res.data.comments }));
+        setThreadsOpen(prev => ({ ...prev, [reviewId]: true }));
+        res.data.comments.forEach(c => fetchReactionCount(c.id));
       } catch {
         alert('Failed to load comments.');
       }
     }
   };
 
-  // post a reply (to a review or to a comment)
+  // post reply
   const submitReply = async (reviewId, parentId = null) => {
-    const txt = (replyText[parentId ?? reviewId] || '').trim();
-    if (!txt) return;
+    const key = parentId || reviewId;
+    const text = (replyText[key]||'').trim();
+    if (!text) return;
     try {
       await api.post(
         `/comment/reviews/${reviewId}/comments`,
-        { comment: txt, parent_id: parentId }
+        { content: text, parent_id: parentId }
       );
-      // refresh
       const res = await api.get(`/comment/reviews/${reviewId}/comments`);
-      setCommentsByReview({
-        ...commentsByReview,
-        [reviewId]: res.data.comments
-      });
-      setReplyText({ ...replyText, [parentId ?? reviewId]: '' });
-      setReplyingTo(null);
+      setCommentsByReview(prev => ({ ...prev, [reviewId]: res.data.comments }));
+      res.data.comments.forEach(c => fetchReactionCount(c.id));
+      setReplyText(prev => ({ ...prev, [key]: '' }));
+      setShowReplyBox(prev => ({ ...prev, [key]: false }));
     } catch {
       alert('Failed to post reply.');
     }
   };
 
-  // like / dislike toggle
-  const toggleReaction = async (itemId, type) => {
+  // like/dislike toggle
+  const toggleReaction = async (commentId, type) => {
     try {
-      await api.post(`/comment/comments/${itemId}/reactions`, { type });
-      setReactions(prev => {
-        const same = prev[itemId] === type;
-        return { ...prev, [itemId]: same ? null : type };
-      });
+      await api.post(`/comment/comments/${commentId}/reactions`, { type });
+      setUserReactions(prev => ({
+        ...prev,
+        [commentId]: prev[commentId] === type ? null : type
+      }));
+      fetchReactionCount(commentId);
     } catch {
       alert('Could not update reaction.');
     }
@@ -155,113 +435,100 @@ export default function UniversityReviews() {
     return roots;
   };
 
-  // render a comment + its children (no stars here)
-  const CommentNode = ({ node, reviewId, depth }) => (
-    <div className="row mb-3" style={{ marginLeft: depth * 16 }}
+  // recursive comment renderer
+  const CommentNode = ({ node, reviewId, depth = 0 }) => (
+    <div
+      className="rev__comment-node"
+      style={{ marginLeft: depth * 20 }}
     >
-      <div className="col-12 univ-rev__card" style={{
-        backgroundColor: depth % 2 === 0 ? '#ffffff' : '#f7f7f7'
-      }}>
+      <div className="rev__comment-header">
         <strong>{node.User.username}</strong>
-        <p className="mt-2">{node.content || '—'}</p>
-
-        <div className="row univ-rev__actions">
-          <div className="col" />
-          <div className="col text-end">
-            <FaReply
-              className="univ-rev__icon"
-              onClick={() => setReplyingTo(node.id)}
-            />
-            {reactions[node.id] === 'like' ? (
-              <FaThumbsUp
-                className="univ-rev__icon univ-rev__icon--filled"
-                onClick={() => toggleReaction(node.id, 'like')}
-              />
-            ) : (
-              <FaRegThumbsUp
-                className="univ-rev__icon"
-                onClick={() => toggleReaction(node.id, 'like')}
-              />
-            )}
-            {reactions[node.id] === 'dislike' ? (
-              <FaThumbsDown
-                className="univ-rev__icon univ-rev__icon--filled"
-                onClick={() => toggleReaction(node.id, 'dislike')}
-              />
-            ) : (
-              <FaRegThumbsDown
-                className="univ-rev__icon"
-                onClick={() => toggleReaction(node.id, 'dislike')}
-              />
-            )}
-          </div>
-        </div>
-
-        {replyingTo === node.id && (
-          <div className="univ-rev__reply-box">
-            <textarea
-              className="univ-rev__reply-input"
-              rows="2"
-              placeholder="Write your reply…"
-              value={replyText[node.id] || ''}
-              onChange={e =>
-                setReplyText({ ...replyText, [node.id]: e.target.value })
-              }
-            />
-            <button
-              className="univ-rev__reply-submit"
-              disabled={!replyText[node.id]?.trim()}
-              onClick={() => submitReply(reviewId, node.id)}
-            >
-              Post
-            </button>
-          </div>
-        )}
-
-        {node.children.length > 0 && (
-          <div className="mt-3">
-            {node.children.map(child => (
-              <CommentNode
-                key={child.id}
-                node={child}
-                reviewId={reviewId}
-                depth={depth + 1}
-              />
-            ))}
-          </div>
-        )}
       </div>
+      <p className="rev__comment-text">{node.content}</p>
+      <div className="rev__comment-actions">
+        <FaReply
+          className="rev__icon"
+          onClick={() =>
+            setShowReplyBox(prev => ({ ...prev, [node.id]: !prev[node.id] }))
+          }
+        />
+        <div className="rev__reaction-group">
+          <button
+            className="rev__icon"
+            onClick={() => toggleReaction(node.id, 'like')}
+          >
+            {userReactions[node.id] === 'like'
+              ? <FaThumbsUp />
+              : <FaRegThumbsUp />}
+            <span>{reactionCounts[node.id]?.likes || 0}</span>
+          </button>
+          <button
+            className="rev__icon"
+            onClick={() => toggleReaction(node.id, 'dislike')}
+          >
+            {userReactions[node.id] === 'dislike'
+              ? <FaThumbsDown />
+              : <FaRegThumbsDown />}
+            <span>{reactionCounts[node.id]?.dislikes || 0}</span>
+          </button>
+        </div>
+      </div>
+
+      {showReplyBox[node.id] && (
+        <div className="rev__reply-box">
+          <textarea
+            className="rev__reply-input"
+            rows="2"
+            placeholder="Your reply…"
+            value={replyText[node.id]||''}
+            onChange={e => setReplyText(prev => ({
+              ...prev, [node.id]: e.target.value
+            }))}
+          />
+          <button
+            className="rev__reply-submit"
+            disabled={!replyText[node.id]?.trim()}
+            onClick={() => submitReply(reviewId, node.id)}
+          >
+            Post
+          </button>
+        </div>
+      )}
+
+      {node.children.map(child => (
+        <CommentNode
+          key={child.id}
+          node={child}
+          reviewId={reviewId}
+          depth={depth+1}
+        />
+      ))}
     </div>
   );
 
   if (loading) return <Loader />;
-  if (error)   return <p className="univ-rev__error">{error}</p>;
+  if (error)   return <p className="rev__error">{error}</p>;
 
   return (
-    <div className="univ-rev">
-      {/* Header */}
-      <div className="row align-items-center mb-4">
-        <div className="col-2">
-          <button className="univ-rev__back" onClick={() => nav(-1)}>
-            <FaArrowLeft /> 
-          </button>
-        </div>
-        <div className="col-8 text-center">
-          <h2 className="univ-rev__title">
-            {reviews[0]?.UniversityProfile?.username || 'University'} Reviews
-          </h2>
-        </div>
-        <div className="col-2 text-end" ref={filterRef}>
+    <div className="rev rev__container">
+      <div className="rev__header">
+        <button className="rev__back" onClick={() => navigate(-1)}>
+          <FaArrowLeft /> Back
+        </button>
+        <h2 className="rev__title">
+          {reviews[0]?.UniversityProfile?.name || 'University'} Reviews
+        </h2>
+        <div ref={filterRef}>
           <FaFilter
-            className="univ-rev__filter-icon"
+            className="rev__filter-icon"
             onClick={() => setFilterOpen(o => !o)}
           />
           {filterOpen && (
-            <ul className="univ-rev__filter-menu">
+            <ul className="rev__filter-menu">
               {SORT_OPTIONS.map(o => (
                 <li
                   key={o.value}
-                  className="univ-rev__filter-item"
+                  className="rev__filter-item"
                   onClick={() => {
                     setSortBy(o.value);
                     setFilterOpen(false);
@@ -275,115 +542,93 @@ export default function UniversityReviews() {
         </div>
       </div>
 
-      {/* Main reviews */}
       {sorted.map(review => (
-        <div key={review.id} className="row m-3">
-          <div className="col-12 univ-rev__card">
-            {/* username + stars */}
-            <div className="row align-items-center">
-              <div className="col">
-                <p className='univ-rev__user'>{review.User.username}</p>
-              </div>
-              <div className="col text-end">
-                {[...Array(5)].map((_, i) =>
-                  i < review.stars ? (
-                    <FaStar
-                      key={i}
-                      className="univ-rev__star univ-rev__star--filled"
-                    />
-                  ) : (
-                    <FaRegStar
-                      key={i}
-                      className="univ-rev__star"
-                    />
-                  )
-                )}
-              </div>
+        <div key={review.id} className="rev__card">
+          <div className="rev__card-top">
+            <strong className="rev__user">{review.User.username}</strong>
+            <div className="rev__stars">
+              {Array.from({ length: 5 }, (_, i) =>
+                i < review.stars
+                  ? <FaStar key={i} className="rev__star rev__star--filled"/>
+                  : <FaRegStar key={i} className="rev__star"/>
+              )}
             </div>
+          </div>
 
-            {/* content */}
-            <p className="mt-2">{review.comment || '—'}</p>
+          <p className="rev__comment">{review.comment || '—'}</p>
 
-            {/* actions + show-comments */}
-            <div className="row univ-rev__actions">
-              <div className="col">
-                {commentCounts[review.id] > 0 && (
-                  <button
-                    className="univ-rev__btn"
-                    onClick={() => toggleThread(review.id)}
-                  >
-                    {threadsOpen[review.id]
-                      ? `Hide comments`
-                      : `Show all comments (${commentCounts[review.id]})`}
-                  </button>
-                )}
-              </div>
-              <div className="col text-end">
-                <FaReply
-                  className="univ-rev__icon"
-                  onClick={() => setReplyingTo(review.id)}
-                />
-                {reactions[review.id] === 'like' ? (
-                  <FaThumbsUp
-                    className="univ-rev__icon univ-rev__icon--filled"
-                    onClick={() => toggleReaction(review.id, 'like')}
-                  />
-                ) : (
-                  <FaRegThumbsUp
-                    className="univ-rev__icon"
-                    onClick={() => toggleReaction(review.id, 'like')}
-                  />
-                )}
-                {reactions[review.id] === 'dislike' ? (
-                  <FaThumbsDown
-                    className="univ-rev__icon univ-rev__icon--filled"
-                    onClick={() => toggleReaction(review.id, 'dislike')}
-                  />
-                ) : (
-                  <FaRegThumbsDown
-                    className="univ-rev__icon"
-                    onClick={() => toggleReaction(review.id, 'dislike')}
-                  />
-                )}
-              </div>
+          <div className="rev__comment-actions">
+            <FaReply
+              className="rev__icon"
+              onClick={() => setShowReplyBox(prev => ({
+                ...prev, [review.id]: !prev[review.id]
+              }))}
+            />
+            <div className="rev__reaction-group">
+              <button
+                className="rev__icon"
+                onClick={() => toggleReaction(review.id, 'like')}
+              >
+                {userReactions[review.id] === 'like'
+                  ? <FaThumbsUp />
+                  : <FaRegThumbsUp />}
+                <span>{reactionCounts[review.id]?.likes || 0}</span>
+              </button>
+              <button
+                className="rev__icon"
+                onClick={() => toggleReaction(review.id, 'dislike')}
+              >
+                {userReactions[review.id] === 'dislike'
+                  ? <FaThumbsDown />
+                  : <FaRegThumbsDown />}
+                <span>{reactionCounts[review.id]?.dislikes || 0}</span>
+              </button>
             </div>
+          </div>
 
-            {/* reply-to-review box */}
-            {replyingTo === review.id && (
-              <div className="univ-rev__reply-box">
-                <textarea
-                  className="univ-rev__reply-input"
-                  rows="2"
-                  placeholder="Write your reply…"
-                  value={replyText[review.id] || ''}
-                  onChange={e =>
-                    setReplyText({ ...replyText, [review.id]: e.target.value })
-                  }
-                />
-                <button
-                  className="univ-rev__reply-submit"
-                  disabled={!replyText[review.id]?.trim()}
-                  onClick={() => submitReply(review.id, null)}
-                >
-                  Post
-                </button>
-              </div>
-            )}
+          {showReplyBox[review.id] && (
+            <div className="rev__reply-box">
+              <textarea
+                className="rev__reply-input"
+                rows="2"
+                placeholder="Your reply…"
+                value={replyText[review.id] || ''}
+                onChange={e => setReplyText(prev => ({
+                  ...prev, [review.id]: e.target.value
+                }))}
+              />
+              <button
+                className="rev__reply-submit"
+                disabled={!replyText[review.id]?.trim()}
+                onClick={() => submitReply(review.id, null)}
+              >
+                Post
+              </button>
+            </div>
+          )}
 
-            {/* nested replies */}
-            {threadsOpen[review.id] && commentsByReview[review.id] && (
-              <div className="mt-3">
-                {buildTree(commentsByReview[review.id]).map(node => (
+          <div className="rev__actions">
+            <button
+              className="rev__btn primary-btn"
+              onClick={() => toggleThread(review.id)}
+            >
+              {threadsOpen[review.id] ? 'Hide Comments' : 'Show All Comments'}
+            </button>
+          </div>
+
+          {threadsOpen[review.id] && (
+            <div className="rev__thread">
+              {buildTree(commentsByReview[review.id]||[])
+                .map(node => (
                   <CommentNode
                     key={node.id}
                     node={node}
                     reviewId={review.id}
-                    depth={1}
                   />
-                ))}
-              </div>
-            )}
-          </div>
+                ))
+              }
+            </div>
+          )}
         </div>
       ))}
     </div>

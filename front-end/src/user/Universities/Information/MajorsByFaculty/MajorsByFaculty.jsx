@@ -55,7 +55,7 @@ const MajorsByFaculty = () => {
       <div className="row align-items-center mb-3">
         <div className="col-2 col-sm-1">
           <button
-            className="majors__back-btn"
+            className="majors-by-faculty__back-btn"
             onClick={() => navigate(-1)}
             aria-label="Go back"
           >
@@ -81,7 +81,7 @@ const MajorsByFaculty = () => {
               <th>Code</th>
               <th>Description</th>
               <th>Credits</th>
-              <th className="text-center">Fav</th>
+              {/* <th className="text-center">Fav</th> */}
             </tr>
           </thead>
           <tbody>
@@ -93,8 +93,8 @@ const MajorsByFaculty = () => {
                   <td>{m.code}</td>
                   <td>{m.description || '—'}</td>
                   <td>{m.number_of_credits ?? '—'}</td>
-                  <td className="text-center">
-                    <button
+                  {/* <td className="text-center"> */}
+                    {/* <button
                       className="majors-by-faculty__fav-btn"
                       type="button"
                       onClick={() => toggleFavorite(m.id)}
@@ -108,8 +108,8 @@ const MajorsByFaculty = () => {
                         ? <FaStar className="majors-by-faculty__fav-icon majors-by-faculty__fav-icon--filled" />
                         : <FaRegStar className="majors-by-faculty__fav-icon" />
                       }
-                    </button>
-                  </td>
+                    </button> */}
+                  {/* </td> */}
                 </tr>
               ))
             ) : (

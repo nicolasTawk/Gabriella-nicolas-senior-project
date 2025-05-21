@@ -89,18 +89,7 @@
     gap: 1rem;
     margin-top: 1rem;
 
-    button {
-      padding: 0.75rem 2rem;
-      font-size: $text-medium;
-      border-radius: 0.5rem;
-      border: 2px solid $primary-color;
-      background: $primary-color;
-      color: $background-color;
-      cursor: pointer;
-
-      &:hover {
-        background: darken($primary-color, 10%);
-      }
+ 
 
       &.cancel {
         background: transparent;
@@ -117,5 +106,5 @@
         font-size: $text-small;
       }
     }
-  }
+  
 }
