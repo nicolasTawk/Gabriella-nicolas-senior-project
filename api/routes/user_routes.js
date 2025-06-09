@@ -28,7 +28,7 @@ router.post(
     body("username").trim().isLength({ min: 3, max: 40 }).withMessage("Username must be 3-40 characters long."),   
     body("first_name").not().isEmpty().trim().escape(),
     body("last_name").not().isEmpty().trim().escape(),
-    body("email").isEmail().normalizeEmail(),
+    body("email").not().isEmpty().trim().escape(),
     body("password").isLength({ min: 5 }).withMessage("password must be at least 5 characters long"),// must be 8 characters must contain capital and spetian 
 
    
