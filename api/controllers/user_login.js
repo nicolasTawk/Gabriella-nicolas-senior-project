@@ -1,0 +1,109 @@
+const bcrypt = require("bcrypt");
+const { User,StudentProfile } = require("../database/models");
+const { validationResult } = require("express-validator");
+const { generateToken } = require("../middleware/auth_middleware");
+
+
+// Register a User (self-registration) => only student
+const registerUser = async (req, res) => {
+  // Validate inputs
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const {
+      first_name,
+      last_name,
+      username,
+      email,
+      password,
+      gender,
+      birth_date,
+      phone
+    
+    } = req.body;
+
+  try {
+    // Hash password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // Force all public registrations to "student"
+    // This ensures that no one can self-register as a university or admin
+    const finalRole = "student";
+
+    const newUser = await User.create({
+     
+      email,
+      username,
+      role: finalRole,
+      password_hash: hashedPassword,
+    });
+
+    await StudentProfile.create({
+    
+       user_id: newUser.id,
+       first_name,
+       last_name,
+       phone,
+       gender,
+       birth_date,
+      
+       
+    });
+    
+
+    // Generate a token for immediate login
+    const token = generateToken(newUser);
+
+    res.status(201).json({
+      message: "User registered as student!",
+      user: newUser,
+      token,
+    });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+// Login a User (student, university, or admin)
+const loginUser = async (req, res) => {
+  // Validate inputs
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const { username, password } = req.body;
+
+
+  try {
+    const user = await User.findOne({ where: { username } });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    if(!user.approved){
+      return res.status(401).json({ error: "User has been temporairley banned" });
+    }
+
+    // Validate password
+    const validPassword = await user.validPassword(password);
+    if (!validPassword) {
+      return res.status(401).json({ error: "Invalid password" });
+    }
+
+    // Generate JWT
+    const token = generateToken(user);
+    res.json({
+      message: "Login successful",
+      token,
+      user,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+module.exports = { registerUser, loginUser };
