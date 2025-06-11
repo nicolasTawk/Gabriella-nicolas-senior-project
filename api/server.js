@@ -43,11 +43,15 @@ app.use((err, req, res, next) => {
 });
 
 const PORT = process.env.PORT || 3001;
+const HOST = process.env.HOST || '0.0.0.0';
 
 const startServer = async () => {
   await connectDB();
   await syncModels();
-  app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+  app.listen(PORT, HOST, () => {
+    console.log(`🚀 Server running on ${HOST}:${PORT}`);
+    console.log(`Frontend URL: ${process.env.FRONTEND_URL || "http://localhost:3000"}`);
+  });
 };
 
 startServer();

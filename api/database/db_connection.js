@@ -11,29 +11,28 @@ const { Sequelize } = require("sequelize");
 //    }
 //  }
 
-const sequelize = new Sequelize(process.env.DB_URL,
-  // process.env.DB_NAME,
-  // process.env.DB_USER,
-  // process.env.DB_PASSWORD,
-  {
-    // host: process.env.DB_HOST,
-    // port: process.env.DB_PORT,
-    // dialect: process.env.DB_DIALECT || "mysql",
-    // logging: false, // Set to true for debugging
-    // // CHANGE: Added connection pooling
-    pool: {
-      max: 10,
-      min: 0,
-      acquire: 30000,
-      idle: 10000,
-    },
+const sequelize = new Sequelize(process.env.DB_URL, {
+  dialect: "mysql",
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false
+    }
+  },
+  logging: false,
+  pool: {
+    max: 10,
+    min: 0,
+    acquire: 30000,
+    idle: 10000,
   }
-);
+});
 
 const connectDB = async () => {
   try {
     await sequelize.authenticate();
     console.log("✅ Connected to Database Successfully!");
+    console.log("Database URL:", process.env.DB_URL ? "Is set" : "Not set");
   } catch (error) {
     console.error("❌ Database Connection Failed:", error);
     process.exit(1);
