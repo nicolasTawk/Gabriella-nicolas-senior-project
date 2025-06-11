@@ -1,5 +1,5 @@
 const { sequelize } = require("../db_connection");
-const User = require("./User");
+const User = require("./user");
 const QuestionnaireResponse = require("./QuestionnaireResponse");
 const QuestionnaireSchema = require("./QuestionnaireSchema");
 const StudentProfile = require("./StudentProfile");
