@@ -1,6 +1,6 @@
 const { sequelize } = require("../db_connection");
 const { DataTypes } = require("sequelize");
-const User = require("./User");  // ensure User is imported first
+const User = require("./user");  // ensure User is imported first
 
 /**
  * University-specific data, linked 1-to-1 with a User whose role="university"
